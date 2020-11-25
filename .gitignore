@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
+literature/
+WDI_csv/
+data/
 
 # C extensions
 *.so
