@@ -34,5 +34,5 @@ reshape long democracy funding pledge gdp, i(country) j(year, string)
 
 gen funding_per_gdp = funding/gdp
 
-graph twoway scatter funding_per_gdp altruism, by(year)
-graph twoway scatter funding altruism, by(year)
+graph twoway scatter funding_per_gdp altruism, by(year) ytitle(Humanitarian Aid Contribution per GDP) xtitle(Altruism)
+graph twoway scatter funding altruism, by(year)  ytitle(Total Humanitarian Aid Contribution) xtitle(Altruism)
