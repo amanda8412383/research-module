@@ -7,7 +7,7 @@ WDI_csv/
 data/
 data_management/
 figures/
-*.*
+.*
 note.ipynb
 
 # C extensions
