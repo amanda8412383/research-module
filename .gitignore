@@ -5,6 +5,10 @@ __pycache__/
 literature/
 WDI_csv/
 data/
+data_management/
+figures/
+.*
+notes.ipynb
 
 # C extensions
 *.so
