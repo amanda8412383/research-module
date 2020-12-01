@@ -15,7 +15,7 @@
 clear all
 
 // Specify path to project root.
-* local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+// local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
 
 
@@ -63,11 +63,9 @@ reshape long democracy funding pledge gdp, i(country) j(year, string)
 gen funding_per_gdp = funding/gdp
 
 graph twoway (scatter funding_per_gdp altruism, msize(small)) (lfit funding_per_gdp altruism), by(year) ytitle(Humanitarian Aid Contribution per GDP) xtitle(Altruism)
-* graph export C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module\figures\funding_per_gdp_altruism_scatter.pdf, replace
 graph export "`PATH_FIGURES'/funding_per_gdp_altruism_scatter.pdf", replace
 
 graph twoway scatter funding altruism, by(year)  ytitle(Total Humanitarian Aid Contribution) xtitle(Altruism) msize(small)
-* graph export C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module\figures\funding_altruism_scatter.pdf, replace
 graph export "`PATH_FIGURES'/funding_altruism_scatter.pdf", replace
 
 
