@@ -153,13 +153,20 @@ destring year population, replace
 save "`PATH_DATA'/population", replace
 
 clear all
+
+/*
+merge gps_demo_donate_gdp_formatted and population datasets
+*/
+
 // Import meged dataset.
 use "`PATH_DATA'/gps_demo_donate_gdp_formatted.dta"
+
 merge 1:1 country year using "`PATH_DATA'/population", keep(3)
 
 /* 14696 not matched (196 from gps_demo_donate_gdp_formatted.dta and 14500 from population data)
 	1400 matched
 */
+
 
 // generate variable for humanitarian aid contribution per capita
 gen funding_per_capita = funding/population
