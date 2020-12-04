@@ -8,6 +8,7 @@ data/
 data_management/
 figures/
 .*
+!.travis.yml
 notes.ipynb
 
 # C extensions
