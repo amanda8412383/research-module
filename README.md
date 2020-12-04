@@ -1,4 +1,6 @@
-This respiratory stores project for the course Research Module in Applied Microeconomics. The project is still in progress. It is also possible to view through _mybinder_. Dataset used in the project could be downloaded at [here.](https://drive.google.com/drive/folders/1MG2aVRWMfzrvAibqx-r2NlfRDPcZ9Bc-?usp=sharing)
+This respiratory stores project for the course Research Module in Applied Microeconomics. The project is still in progress. It is also possible to view through _mybinder_. Dataset used in the project is zipped as data.zip, it could also be downloaded at [here.](https://drive.google.com/drive/folders/1MG2aVRWMfzrvAibqx-r2NlfRDPcZ9Bc-?usp=sharing)
+
+auxilary.py stores function that is used. environment request is in env.yml. cleaning.py is export from cleaning.ipynb.
 
 <!-- It is connected to Travis to ensure the reproductivity of all files inside. -->
 

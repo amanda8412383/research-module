@@ -22,13 +22,20 @@ def add_prefix(year, **kwargs):
         return f"{prefix}20{year}"
 
 
-def convert_percent(nominator_string, denominator_string, df ):
-    """this function take 2 string of variable name and return a dataframe with appending percentage columns by year"""
+def convert_percent(nominator_string, denominator_string, df ,**kwargs):
+    """this function take 2 string of variable name and return a dataframe with appending percentage columns by year
+    2 optional arguments could be given 
+    ratio: (int) times the final result by ratio given, default=1
+    decimal: (int) round the final result by decimal given, default=4"""
+
+    ratio = kwargs.get('ratio', 1)
+    decimal = kwargs.get('decimal', 4)
+
     df_new = df.copy()
     for i in range(3, 20):
         year = add_prefix(i)
         nom = f"{nominator_string}{year}"
         new = f"{nom}_{denominator_string}"
         denom = add_prefix(i, prefix=denominator_string)
-        df_new[new] = df_new[nom].div(df_new[denom]).mul(100)
+        df_new[new] = df_new[nom].div(df_new[denom]).mul(ratio).round(decimal)
     return df_new
