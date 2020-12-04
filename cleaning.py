@@ -120,7 +120,10 @@ gps_demo_donate[gps_demo_donate.filter(regex='(funding|pledge)20*', axis=1).isna
 # ### read in GDP in current US dollar data from WDI and merge with previous data frame
 
 # %%
-gdp = pd.read_excel('data/GDP_by_country_by_year.xls', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
+try:
+	gdp = pd.read_excel('data/GDP_by_country_by_year.xls', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
+except:
+	gdp = pd.read_excel('data/GDP_by_country_by_year.xlsx', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
 gdp = gdp.iloc[:,-18 : -1]
 gdp = gdp.add_prefix('gdp')
 gdp.reset_index()
@@ -171,7 +174,10 @@ df_add_expense = pd.merge(df_add_capita, expense_filter, how='left', on="isocode
 # ### adding region and income group data from WDI
 
 # %%
-region = pd.read_csv('data/WDICountry.csv').rename(columns={"Country Code": "isocode"}).set_index('isocode')
+try:
+	region = pd.read_csv('data/WDICountry.csv').rename(columns={"Country Code": "isocode"}).set_index('isocode')
+except:
+	region = pd.read_excel('data/WDICountry.csv.xlsx').rename(columns={"Country Code": "isocode"}).set_index('isocode')
 region_rename = region.rename({'Region': 'region', 'Income Group': 'income_type'}, axis=1)
 region_filter = region_rename.filter(items=['region', 'income_type'], axis=1)
 region_filter.head()
@@ -201,7 +207,10 @@ df_add_pop = pd.merge(df_add_region, pop_filter, how='left', on="isocode")
 # ### notice 54/76 countries have no ODA record from 2003 ~ 2019
 
 # %%
-oda = pd.read_excel('data/oda.xls', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
+try:
+	oda = pd.read_excel('data/oda.xls', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
+except:
+	oda = pd.read_excel('data/oda.xlsx', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
 oda_filter = oda.filter(regex='^20(10|11|12|.*[3456789]$)', axis=1).add_prefix('oda')
 oda_filter.head()
 
@@ -226,8 +235,10 @@ df_add_oda[df_add_oda.filter(regex='oda.*', axis=1).isna().all(axis=1)].shape
 # ### notice 63/76 countries does not have any record
 
 # %%
-
-aid = pd.read_excel('data/offial aid received.xls', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
+try:
+	aid = pd.read_excel('data/offial aid received.xls', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
+except:
+	aid = pd.read_excel('data/offial aid received.xlsx', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
 aid_filter = aid.filter(regex='^20(10|11|12|.*[3456789]$)', axis=1).add_prefix('aid')
 aid_filter.head()
 

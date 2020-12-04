@@ -14,16 +14,16 @@
 clear all
 
 // Specify path to project root.
-local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
-// local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
+* local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+local PATH_PROJECT_ROOT "C:/Users/Timo/Desktop/RM/research-module"  // Timo
 
 
 // *data* folder.
-local PATH_DATA "`PATH_PROJECT_ROOT'/data/"
+local PATH_DATA "`PATH_PROJECT_ROOT'/data"
 // *figures* folder.
-local PATH_FIGURES "`PATH_PROJECT_ROOT'/figures/"
+local PATH_FIGURES "`PATH_PROJECT_ROOT'/figures"
 // *tables* folder.
-local PATH_TABLES "`PATH_PROJECT_ROOT'/tables/"
+local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 
 
 /* Prepare merged result data set */
@@ -64,6 +64,16 @@ label var govexpense "Total Government Expenditure as % of GDP"
 label var pop "Population"
 label var oda "Net Official Development Assistance in Current US Dollar"
 label var aid "Official Aid Received"
+
+
+// Transform *gdpcapita* and *govexpense* to proper numbers.
+replace gdpcapita = subinstr(gdpcapita, ",", "", .) // strip ","
+replace gdpcapita = subinstr(gdpcapita, ".", "", .) // strip "."
+destring gdpcapita, replace
+replace gdpcapita = gdpcapita/1000
+
+replace govexpense = govexpense/1000
+
 
 
 /* generate variable for humanitarian aid contribution per GDP and
