@@ -89,9 +89,17 @@ label var avg_funding_gdp "Avg. Humanitarian Aid Funding per GDP"
 gen funding_capita = funding/pop
 label var funding_capita "Humanitarian Aid Funding per Capita"
 
-//  generate variable for mean funding per capita over years 2010-2019
+//  generate variable for mean humanitarian aid contribution per capita over years 2010-2019
 bysort country: egen avg_funding_capita = mean(funding_capita / (year>=2010))
 label var avg_funding_capita "Avg. Humanitarian Aid Funding per Capita"
+
+// generate variable for humanitarian aid contribution relative to government size
+gen funding_govsize = funding/govexpense
+label var funding_govsize "Humanitarian Aid Funding relative to Government Size"
+
+//  generate variable for mean humanitarian aid contribution relative to government size over years 2010-2019
+bysort country: egen avg_funding_govsize = mean(funding_govsize / (year>=2010))
+label var avg_funding_govsize "Avg. Humanitarian Aid Funding rel. to Government Size"
 
 
 // save dataset
