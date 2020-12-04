@@ -39,3 +39,9 @@ def convert_percent(nominator_string, denominator_string, df ,**kwargs):
         denom = add_prefix(i, prefix=denominator_string)
         df_new[new] = df_new[nom].div(df_new[denom]).mul(ratio).round(decimal)
     return df_new
+
+def mean_country(filter_regex, df, **kwargs):
+    """this function use the regular expression given to filter df, and return average groupby group_key,"""
+    group_key = kwargs.get('group_key', 'country')
+    df_select = df.set_index(group_key).filter(regex=filter_regex, axis=1)
+    df_mean = df_select.mean(axis=1)
