@@ -102,8 +102,7 @@ for i in range(len(all_filenames)):
     else:
         df = pd.merge(df, new, how='outer', on="country", suffixes=('', f'20{i+3}'))
 
-donate = df.rename(columns={"pledge": "pledge2003", "funding": "funding2003"})
-
+donate = df.rename(columns={"pledge": "pledge2003", "funding": "funding2003"}).replace({0: np.nan})
 donate['country'] = donate['country'].str.rstrip(' Government of')
 donate['country'] = donate['country'].str.rstrip(',')
 
@@ -218,6 +217,7 @@ df_add_pop = pd.merge(df_add_region, pop_filter, how='left', on="isocode")
 # %%
 oda = pd.read_excel('data/oda.xls', sheet_name='Data', skiprows=3).rename(columns={"Country Code": "isocode"}).set_index('isocode')
 oda_filter = oda.filter(regex='^20(10|11|12|.*[3456789]$)', axis=1).add_prefix('oda')
+# oda_replace = oda.replace({0: np.nan})
 oda_filter.head()
 
 
@@ -267,6 +267,6 @@ df_add_aid.head()
 # ### output
 
 # %%
-df_add_aid.to_csv('data/result.csv') 
+df_add_aid.to_csv('data/result.csv', index=False) 
 
 

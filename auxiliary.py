@@ -4,7 +4,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 sns.set_theme(style="ticks")
 
-
 def regplot(x_var, y_var, df):
     """this function take 2 string as column name from dataframe and plot them into regression plot"""
     sns.jointplot(x=x_var, y=y_var, data=df, kind="reg", color="#4CB391",   height=4)
@@ -35,7 +34,7 @@ def convert_percent(nominator_string, denominator_string, df ,**kwargs):
     for i in range(3, 20):
         year = add_prefix(i)
         nom = f"{nominator_string}{year}"
-        new = f"{nom}_{denominator_string}"
+        new = f"{nominator_string}_{denominator_string}{year}"
         denom = add_prefix(i, prefix=denominator_string)
         df_new[new] = df_new[nom].div(df_new[denom]).mul(ratio).round(decimal)
     return df_new
@@ -45,3 +44,17 @@ def mean_country(filter_regex, df, **kwargs):
     group_key = kwargs.get('group_key', 'country')
     df_select = df.set_index(group_key).filter(regex=filter_regex, axis=1)
     df_mean = df_select.mean(axis=1)
+
+    def sample3(col_name, df):
+    """this function print out the column name given and 3 
+    sample mean and variance """
+        a, b, c = np.split(
+        df[col_name].sample(frac=1), 
+        [int(.25*len(df[col_name])), int(.75*len(df[col_name]))]
+        )
+    mean = np.around([a.mean(), b.mean(), c.mean()], 2)
+    var = np.around([a.var(), b.var(), c.var()], 2)
+    print(col_name)
+    print(mean)
+    print(var)
+
