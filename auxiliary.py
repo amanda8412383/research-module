@@ -45,13 +45,12 @@ def mean_country(filter_regex, df, **kwargs):
     df_select = df.set_index(group_key).filter(regex=filter_regex, axis=1)
     df_mean = df_select.mean(axis=1)
 
-    def sample3(col_name, df):
-    """this function print out the column name given and 3 
-    sample mean and variance """
-        a, b, c = np.split(
+def sample3(col_name, df):
+    """this function print out the column name given and 3 sample mean and variance """
+    a, b, c = np.split(
         df[col_name].sample(frac=1), 
         [int(.25*len(df[col_name])), int(.75*len(df[col_name]))]
-        )
+    )
     mean = np.around([a.mean(), b.mean(), c.mean()], 2)
     var = np.around([a.var(), b.var(), c.var()], 2)
     print(col_name)
