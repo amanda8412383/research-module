@@ -5,7 +5,7 @@ clear all
 // Specify path to project root.
 local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 * local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
-
+* local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
 
 // *data* folder.
 local PATH_DATA "`PATH_PROJECT_ROOT'/data"

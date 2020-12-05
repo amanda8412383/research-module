@@ -6,8 +6,7 @@
 		in the repository "research-module" there needs to be a "data" folder
 		containing the merged data set; the "figures" and "tables" folders
 		should be created automatically.
-	@Amanda, if github storage is an issue, you might want to add the "figures"
-	folder to gitignore, such that figures are only created when the code is ran.
+
 */
 
 
@@ -16,6 +15,8 @@ clear all
 // Specify path to project root.
 * local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 local PATH_PROJECT_ROOT "C:/Users/Timo/Desktop/RM/research-module"  // Timo
+* local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
+
 
 
 // *data* folder.
