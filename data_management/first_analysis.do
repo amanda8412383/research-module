@@ -20,7 +20,7 @@ local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 use "`PATH_DATA'/result_formatted"
 
 // plot altruism and humanitarian aid contributions
-graph twoway scatter funding altruism, by(year)  ytitle(Total Humanitarian Aid Contribution) xtitle(Altruism) msize(small)
+graph twoway (scatter funding altruism, msize(small)) (lfit funding altruism), by(year) ytitle(Humanitarian Aid Contribution) xtitle(Altruism)
 graph export "`PATH_FIGURES'/funding_altruism_scatter.pdf", replace
 
 
@@ -69,3 +69,55 @@ graph twoway ///
 		avg_funding_govsize>0.01), ///
 	ytitle("Avg. Humanitarian Aid Contribution rel. to Government Size (2010-19)") xtitle(Altruism)
 graph export "`PATH_FIGURES'/avg_funding_gov_size_altruism_scatter.pdf", replace
+
+
+// Plot GDP per capita on democratization
+graph twoway (scatter gdpcapita demo, msize(small)) (lfit gdpcapita demo), by(year) ytitle(GDP per Capita) xtitle(Democratization Index)
+graph export "`PATH_FIGURES'/GDP_capita_democratization_scatter.pdf", replace
+
+
+// Plot GDP per capita on altruism
+graph twoway (scatter gdpcapita altruism, msize(small)) (lfit gdpcapita altruism), by(year) ytitle(GDP per Capita) xtitle(Altruism)
+graph export "`PATH_FIGURES'/GDP_capita_altruism_scatter.pdf", replace
+
+
+// Plot mean humanitarian aid contribution per capita on altruism by democracy level.
+graph twoway ///
+	(scatter avg_funding_capita altruism if year==2019 & ///
+		avg_funding_capita>0.01, msize(small)) ///
+	(lfit avg_funding_capita altruism if year==2019 & ///
+		avg_funding_capita>0.01), ///
+	by(demo_categories) ///
+	ytitle("Avg. Humanitarian Aid Contribution per capita (2010-19)") xtitle(Altruism)
+graph export "`PATH_FIGURES'/avg_funding_per_capita_altruism_by_demo_scatter.pdf", replace
+
+
+// Plot mean humanitarian aid contribution per GDP on altruism by democracy level.
+graph twoway ///
+	(scatter avg_funding_gdp altruism if year==2019 & ///
+		avg_funding_gdp>0.0001, msize(small)) ///
+	(lfit avg_funding_gdp altruism if year==2019 & ///
+		avg_funding_gdp>0.0001), ///
+	by(demo_categories) ///
+	ytitle("Avg. Humanitarian Aid Contribution per GDP (2010-19)") xtitle(Altruism)
+graph export "`PATH_FIGURES'/avg_funding_per_GDP_altruism_by_demo_scatter.pdf", replace
+
+
+// plot altruism and Net Official Development Assistance (ODA)
+graph twoway (scatter oda altruism, msize(small)) (lfit oda altruism), by(year) ytitle(Net Official Development Assistance) xtitle(Altruism)
+graph export "`PATH_FIGURES'/ODA_altruism_scatter.pdf", replace
+
+// Plot mean Net Official Development Assistance on altruism
+graph twoway ///
+	(scatter avg_oda altruism if year==2019, msize(small)) ///
+	(lfit avg_oda altruism if year==2019), ///
+	ytitle("Avg. Net Official Development Assistance (2010-19)") xtitle(Altruism)
+graph export "`PATH_FIGURES'/avg_oda_altruism_scatter.pdf", replace
+
+// Plot mean Net Official Development Assistance on altruism by democracy level.
+graph twoway ///
+	(scatter avg_oda altruism if year==2019, msize(small)) ///
+	(lfit avg_oda altruism if year==2019), ///
+	by(demo_categories) ///
+	ytitle("Avg. Net Official Development Assistance (2010-19)") xtitle(Altruism)
+graph export "`PATH_FIGURES'/avg_oda_altruism_by_demo_scatter.pdf", replace
