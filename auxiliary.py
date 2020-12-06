@@ -40,10 +40,12 @@ def convert_percent(nominator_string, denominator_string, df ,**kwargs):
     return df_new
 
 def mean_country(filter_regex, df, **kwargs):
-    """this function use the regular expression given to filter df, and return average groupby group_key,"""
+    """this function use the regular expression given to filter df, and return average groupby group_key
+    (default key is country)"""
     group_key = kwargs.get('group_key', 'country')
     df_select = df.set_index(group_key).filter(regex=filter_regex, axis=1)
     df_mean = df_select.mean(axis=1)
+    return df_mean
 
 def sample3(col_name, df):
     """this function print out the column name given and 3 sample mean and variance """
