@@ -13,8 +13,8 @@
 clear all
 
 // Specify path to project root.
-* local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
-local PATH_PROJECT_ROOT "C:/Users/Timo/Desktop/RM/research-module"  // Timo
+local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+*local PATH_PROJECT_ROOT "C:/Users/Timo/Desktop/RM/research-module"  // Timo
 * local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
 
 
@@ -94,6 +94,10 @@ label var funding_capita "Humanitarian Aid Funding per Capita"
 bysort country: egen avg_funding_capita = mean(funding_capita / (year>=2010))
 label var avg_funding_capita "Avg. Humanitarian Aid Funding per Capita"
 
+//  generate variable for mean Net Official Development Assistance over years 2010-2019
+bysort country: egen avg_oda = mean(oda / (year>=2010))
+label var avg_oda "Avg. Net Official Development Assistance"
+
 // generate variable for humanitarian aid contribution relative to government size
 gen funding_govsize = funding/govexpense
 label var funding_govsize "Humanitarian Aid Funding relative to Government Size"
@@ -102,6 +106,14 @@ label var funding_govsize "Humanitarian Aid Funding relative to Government Size"
 bysort country: egen avg_funding_govsize = mean(funding_govsize / (year>=2010))
 label var avg_funding_govsize "Avg. Humanitarian Aid Funding rel. to Government Size"
 
+// generate variable with democracy index categories
+gen demo_categories = 1 
+replace demo_categories = 2 if demo >=4
+replace demo_categories = 3 if demo >=6
+replace demo_categories = 4 if demo >=8
+label var demo_categories "Democracy Index Categories"
+label define demo_cat 1 "Authoritarian regime" 2 "Hybrid regime" 3 "Flawed democracy" 4 "Full democracy"
+label val demo_categories demo_cat
 
 // save dataset
 save "`PATH_DATA'/result_formatted", replace
