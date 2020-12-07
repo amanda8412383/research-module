@@ -10,6 +10,8 @@ data_management/
 figures/
 .*
 !.travis.yml
+
+gmmiv.ipynb
 notes.ipynb
 
 # C extensions

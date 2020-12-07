@@ -45,7 +45,7 @@ def mean_country(filter_regex, df, **kwargs):
     decimal = kwargs.get('decimal', 4)
     group_key = kwargs.get('group_key', 'country')
     df_select = df.set_index(group_key).filter(regex=filter_regex, axis=1)
-    df_mean = df_select.mean(axis=1).round(decimal)
+    df_mean = df_select.mean(axis=1).round(decimal).values
     return df_mean
 
 def sample3(col_name, df):
