@@ -6,13 +6,13 @@ figures/
 literature/
 WDI_csv/
 data/
-data_management/
 figures/
 .*
 !.travis.yml
 
 gmmiv.ipynb
 notes.ipynb
+panel_test.ipynb
 
 # C extensions
 *.so
