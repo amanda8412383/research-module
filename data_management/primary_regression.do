@@ -28,8 +28,9 @@ egen region_num = group(region)
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
 
-//in just-identified case, they should be the same
 **normal 2sls & gmm**
+//in just-identified case, they should be the same
+//problem: democratic does not satisfy exogeneity
 *robust*
 ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, robust
 ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, cluster(isonum)
