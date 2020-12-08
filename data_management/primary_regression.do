@@ -1,4 +1,3 @@
-// which is  more sensible, cluster at country or assuming heteroskadesticity?
 
 clear all
 
@@ -30,23 +29,24 @@ egen region_num = group(region)
 
 **normal 2sls & gmm**
 //in just-identified case, they should be the same
+//ivreg is outdated, ivreg2 should return similar result
+//cluster seems more sensible in our panel setting 
 //problem: democratic does not satisfy exogeneity
 *robust*
-ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, robust
-ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, cluster(isonum)
+ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 *cluster*
-ivregress gmm funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, robust
-ivregress gmm funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, cluster(isonum)
+ivregress gmm funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+ivregress gmm funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 
 
 
 **panel data within approach on time-invariant variables**
+//for panel xtreg with vce(robust) is not an valid option
 xtset isonum year
+xtreg funding_gdp demo govexpense pop gdp,fe vce(cluster isonum)
+predict u, re
 *robust*
-xtreg funding_gdp demo govexpense pop gdp,fe vce(robust)
-predict u_robust, re
-reg funding_gdp u_robust i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
+*reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
 *cluster*
-xtreg funding_gdp demo govexpense pop gdp,fe cluster(isonum)
-predict u_cluster, re
-reg funding_gdp u_cluster i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, cluster(isonum) 
+reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
