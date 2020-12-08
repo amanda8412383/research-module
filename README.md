@@ -12,8 +12,19 @@ Dataset used in the project is zipped as data.zip. auxilary.py stores function t
 
 ---
  
-### ![#3394FF](https://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**Cleaning.ipynb :**</span> 
+### ![#3394FF](https://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**data_management :**</span> 
+containing stata do file, cooperatively contributed by the team
+
+
+---
+ 
+### ![#FA8AAB](https://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**Cleaning.ipynb :**</span> 
 merging the data that is needed for our research project, using countries as the key
+
+---
+ 
+### ![#3394FF](https://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**wide_to_long :**</span> 
+ transform data from wide to long and setting up variables by the preference of stata
 
 ---
  
@@ -21,9 +32,19 @@ merging the data that is needed for our research project, using countries as the
 primarily exploratory data analysis. Containing plots of relationship between different sets of variables by years.
 
 ---
-
  
-### ![#3394FF](https://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**data_management & figures :**</span> 
-containing stata do file and graph output of the do file from my teammate
+### ![#3394FF](https://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**timeseries_check.ipynb :**</span> 
+primarily exploratory data analysis. Containing plots of relationship between different sets of variables by years.
 
 ---
+
+ 
+### ![#FA8AAB](https://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**gmmiv.ipynb :**</span> 
+an attempt to apply OLS, 2SLS and GMM models in package linearmodels on our data
+
+---
+<!--  
+### ![#3394FF](https://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**panel_test.ipynb :**</span> 
+an attempt to apply panel models in package linearmodels on our data
+
+--- -->

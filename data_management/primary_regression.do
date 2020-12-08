@@ -27,12 +27,24 @@ egen region_num = group(region)
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
 
+**ols**
+*basic ols*
+reg funding_gdp altruism
+*ols with cluster*
+reg funding_gdp altruism, vce(cluster isonum)
+*ols with demo*
+reg funding_gdp altruism demo, vce(cluster isonum)
+*ols with controls*
+reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+
+
 
 **2sls & gmm**
 //in just-identified case, gmm & 2sls should be the same
 //cluster seems more sensible in our panel setting 
 //problem: democratic does not satisfy exogeneity
 //problem: it seems like based on Weak-instrument-robust inference, demo is a weak instrument in all 3 test
+//(pls let me know if i stupidly misread the weak instrument test statistic)
 
 *2sls robust*
 ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)

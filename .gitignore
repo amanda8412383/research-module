@@ -10,10 +10,8 @@ figures/
 .*
 !.travis.yml
 
-gmmiv.ipynb
 notes.ipynb
 panel_test.ipynb
-
 # C extensions
 *.so
 
