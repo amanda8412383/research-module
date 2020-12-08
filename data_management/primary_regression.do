@@ -27,26 +27,34 @@ egen region_num = group(region)
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
 
-**normal 2sls & gmm**
-//in just-identified case, they should be the same
-//ivreg is outdated, ivreg2 should return similar result
+
+**2sls & gmm**
+//in just-identified case, gmm & 2sls should be the same
 //cluster seems more sensible in our panel setting 
 //problem: democratic does not satisfy exogeneity
-*robust*
+//problem: it seems like based on Weak-instrument-robust inference, demo is a weak instrument in all 3 test
+
+*2sls robust*
 ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+*2sls cluster
 ivregress 2sls funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
-*cluster*
+*gmm robust*
 ivregress gmm funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+*gmm cluster*
 ivregress gmm funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+*ivreg2*
+ivreg2  funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, first cluster(isonum)
 
 
 
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
 xtset isonum year
+
 xtreg funding_gdp demo govexpense pop gdp,fe vce(cluster isonum)
 predict u, re
 *robust*
-*reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
+reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
 *cluster*
 reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
+
