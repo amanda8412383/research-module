@@ -1,6 +1,4 @@
-
 clear all
-
 // Specify path to project root.
 *local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 * local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
@@ -13,8 +11,6 @@ local PATH_FIGURES "`PATH_PROJECT_ROOT'/figures"
 // *tables* folder.
 local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 
-
-
 // load the dataset
 import delimited "`PATH_DATA'/result_long.csv"
 
@@ -22,6 +18,8 @@ import delimited "`PATH_DATA'/result_long.csv"
 egen isonum = group(isocode)
 egen income = group(income_type)
 egen region_num = group(region)
+
+xtset isonum year
 
 
 *list isocode isonum in 5/10, sepby(isocode)
@@ -36,6 +34,7 @@ reg funding_gdp altruism, vce(cluster isonum)
 reg funding_gdp altruism demo, vce(cluster isonum)
 *ols with controls*
 reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+*reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
 
 
 
@@ -61,12 +60,21 @@ ivreg2  funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risk
 
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
-xtset isonum year
-
+//significant not normal
 xtreg funding_gdp demo govexpense pop gdp,fe vce(cluster isonum)
+
 predict u, re
 *robust*
 reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
 *cluster*
 reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
 
+
+
+**checking density of the residual**
+//obviously not normal, especially in middle range
+//pnorm sensitive to non-normality in middle range
+//qnorm sensitive to non-normality in tails
+kdensity u, normal
+pnorm u
+qnorm u
