@@ -60,21 +60,27 @@ ivreg2  funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risk
 
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
-//significant not normal
+//insignificant & not normal, would this cause any problem?
 xtreg funding_gdp demo govexpense pop gdp,fe vce(cluster isonum)
-
 predict u, re
-*robust*
-reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
-*cluster*
-reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
 
+*robust*
+//significant, close to normal
+reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
+predict u_r, re
+
+*cluster*
+//significant, close to normal
+reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
+predict u_c, re
 
 
 **checking density of the residual**
 //obviously not normal, especially in middle range
 //pnorm sensitive to non-normality in middle range
 //qnorm sensitive to non-normality in tails
-kdensity u, normal
+kdensity u_r, normal
+kdensity u_c, normal
+
 pnorm u
 qnorm u
