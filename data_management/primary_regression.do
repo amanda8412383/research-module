@@ -58,20 +58,52 @@ ivreg2  funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risk
 
 
 
+
+**panel**
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
-//insignificant & not normal, would this cause any problem?
-xtreg funding_gdp demo govexpense pop gdp,fe vce(cluster isonum)
-predict u, re
+//xtgls is for T>N panel
+xtreg funding_gdp demo govexpense pop gdp,re vce(cluster isonum)
 
-*robust*
-//significant, close to normal
-reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
+**predict res**
+//ui: the random-error component
+//eit: the overall error component 
+predict ui, ue
+predict eit, e
+
+**testing re or fe**
+//H0: fixed effect should be used
+//result using re
+xtoverid
+ 
+**check serial correlation in error term**
+//xtcsd H0:uit is independent and i.i.d. over t & section
+//Friedman's suggest not iid, but Frees and Friedman have uninvestigated finite-sample properties
+//xttest2 check cross sectional dependence, but is biased under N > T
+xtcsd, pesaran
+xtcsd, frees
+xtcsd, friedman
+
+**simplified white test for hetero**
+//xttest3 check for hetro, perform poorly under N>T, not work in re
+//H0: σ2i = σ2
+//result cannot reject H0, data might be homo
+//if cross products are introduced then it test hetero & specification bias
+//source:https://economics.stackexchange.com/questions/11221/testing-for-heteroskedasticity-in-panel-data-vs-time-series
+predict xb, xb
+gen uhatsq = ui^2
+reg uhatsq c.xb##c.xb, vce(cl isonum)
+testparm c.xb##c.xb
+
+
+*robust estimate time invariant*
+//significant, u close to normal
+reg funding_gdp ui i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
 predict u_r, re
 
 *cluster*
-//significant, close to normal
-reg funding_gdp u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
+//significant, u close to normal
+reg funding_gdp ui i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
 predict u_c, re
 
 
@@ -79,8 +111,12 @@ predict u_c, re
 //obviously not normal, especially in middle range
 //pnorm sensitive to non-normality in middle range
 //qnorm sensitive to non-normality in tails
+//eit close to normal but ui is not
+kdensity ui, normal
+kdensity eit, normal
+
 kdensity u_r, normal
 kdensity u_c, normal
+pnorm u_c
+qnorm u_c
 
-pnorm u
-qnorm u
