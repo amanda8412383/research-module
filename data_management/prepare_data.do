@@ -32,15 +32,10 @@ local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 // Import meged dataset
 import delimited using "`PATH_DATA'/result"
 
-
-drop v1
-
-// rename variables 
-
-ren funding#_gdp funding_gdp#
+drop oda_int
 
 // reshape to long format to have for each country and each year one observation
-reshape long demo funding pledge gdp funding_gdp gdpcapita govexpense pop oda aid, i(country) j(year, string)
+reshape long demo funding pledge gdp funding_gdp gdpcapita govexpense pop oda, i(country) j(year, string)
 
 // label variables
 
@@ -66,7 +61,7 @@ label var pop "Population"
 label var oda "Net Official Development Assistance in Current US Dollar"
 label var aid "Official Aid Received"
 
-
+/*
 // Transform *gdpcapita* and *govexpense* to proper numbers.
 replace gdpcapita = subinstr(gdpcapita, ",", "", .) // strip ","
 replace gdpcapita = subinstr(gdpcapita, ".", "", .) // strip "."
@@ -74,7 +69,7 @@ destring gdpcapita, replace
 replace gdpcapita = gdpcapita/1000
 
 replace govexpense = govexpense/1000
-
+*/
 
 
 /* generate variable for humanitarian aid contribution per GDP and
@@ -114,6 +109,32 @@ replace demo_categories = 4 if demo >=8
 label var demo_categories "Democracy Index Categories"
 label define demo_cat 1 "Authoritarian regime" 2 "Hybrid regime" 3 "Flawed democracy" 4 "Full democracy"
 label val demo_categories demo_cat
+
+// OECD indicator
+
+gen oecd = 0
+replace oecd = 1 if country=="Australia" | country=="Austria" | ///
+	country=="Belgium" | country=="Canada" | country=="Chile" | country=="Colombia" | ///
+	country=="Czech Republic" | country=="Denmark" | country=="Estonia" | ///
+	country=="Finland" | country=="France" | country=="Germany" | ///
+	country=="Greece" | country=="Hungary" | country=="Iceland" | ///
+	country=="Ireland" | country=="Israel" | country=="Italy" | ///
+	country=="Japan" | country=="Korea, Republic of" | country=="Latvia" | country=="Lithuania" | ///
+	country=="Luxembourg" | country=="Mexico" | country=="Netherlands" | ///
+	country=="New Zealand" | country=="Norway" | country=="Poland" | ///
+	country=="Portugal" | country=="Slovakia" | country=="Slovenia" | ///
+	country=="Spain" | country=="Sweden" | country=="Switzerland" | ///
+	country=="Turkey" | country=="United Kingdom" | country=="United States"
+label var oecd "Indicator for OECD Member"
+label define oecd 0 "no OECD member" 1 "OECD member"
+label val oecd oecd
+
+	
+	
+// drop Bosnia because has no humanitarian aid data
+drop if country == "Bosnia Herzegovina"
+//drop if no democratic index data 
+drop if demo==.
 
 // save dataset
 save "`PATH_DATA'/result_formatted", replace
