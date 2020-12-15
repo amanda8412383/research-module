@@ -1,8 +1,8 @@
 clear all
 // Specify path to project root.
-*local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 * local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
-local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
+*local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
 
 // *data* folder.
 local PATH_DATA "`PATH_PROJECT_ROOT'/data"
@@ -13,6 +13,8 @@ local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 
 // load the dataset
 import delimited "`PATH_DATA'/result_long.csv"
+*use "`PATH_DATA'/result_formatted"
+
 
 **change variable type
 egen isonum = group(isocode)
@@ -35,6 +37,28 @@ reg funding_gdp altruism demo, vce(cluster isonum)
 *ols with controls*
 reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 *reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+
+
+**ols with funding per capita**
+*basic ols*
+reg funding_capita altruism
+*ols with cluster*
+reg funding_capita altruism, vce(cluster isonum)
+*ols with demo*
+reg funding_capita altruism demo, vce(cluster isonum)
+*ols with controls*
+reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+
+
+**ols with funding per capita**
+*basic ols*
+reg funding_govsize altruism
+*ols with cluster*
+reg funding_govsize altruism, vce(cluster isonum)
+*ols with demo*
+reg funding_govsize altruism demo, vce(cluster isonum)
+*ols with controls*
+reg funding_govsize altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 
 
 
