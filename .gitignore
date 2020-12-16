@@ -12,6 +12,9 @@ figures/
 
 notes.ipynb
 panel_test.ipynb
+todo.txt
+
+
 # C extensions
 *.so
 

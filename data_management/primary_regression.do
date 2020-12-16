@@ -18,12 +18,12 @@ import delimited "`PATH_DATA'/result_long.csv"
 egen isonum = group(isocode)
 egen income = group(income_type)
 egen region_num = group(region)
+gen funding_capita = funding/gdpcapita
 
 xtset isonum year
 
-
 *list isocode isonum in 5/10, sepby(isocode)
-*list income_type income in 48/56, sepby(income_type)
+list income_type income in 48/56, sepby(income_type)
 
 **ols**
 *basic ols*
@@ -63,7 +63,7 @@ ivreg2  funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risk
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
 //xtgls is for T>N panel
-xtreg funding_gdp demo govexpense pop gdp,re vce(cluster isonum)
+xtreg funding_gdp demo govexpense pop gdp gni,re vce(cluster isonum)
 
 **predict res**
 //ui: the random-error component
@@ -77,17 +77,16 @@ predict eit, e
 xtoverid
  
 **check serial correlation in error term**
-//xtcsd H0:uit is independent and i.i.d. over t & section
-//Friedman's suggest not iid, but Frees and Friedman have uninvestigated finite-sample properties
 //xttest2 check cross sectional dependence, but is biased under N > T
-xtcsd, pesaran
-xtcsd, frees
-xtcsd, friedman
+//xtcsd H0:uit is independent and i.i.d. over t & section
+//using unbalanced data break xtcsd
+//result suggest correlated across panel groups.
+xtcdf funding_capita eit
 
 **simplified white test for hetero**
 //xttest3 check for hetro, perform poorly under N>T, not work in re
 //H0: σ2i = σ2
-//result cannot reject H0, data might be homo
+//result  reject H0, data should be hetero
 //if cross products are introduced then it test hetero & specification bias
 //source:https://economics.stackexchange.com/questions/11221/testing-for-heteroskedasticity-in-panel-data-vs-time-series
 predict xb, xb
@@ -97,13 +96,11 @@ testparm c.xb##c.xb
 
 
 *robust estimate time invariant*
-//significant, u close to normal
-reg funding_gdp ui i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(robust) 
+reg funding_capita ui i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(robust) 
 predict u_r, re
 
 *cluster*
-//significant, u close to normal
-reg funding_gdp ui i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean, vce(cluster isonum) 
+reg funding_capita ui i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum) 
 predict u_c, re
 
 
@@ -120,3 +117,63 @@ kdensity u_c, normal
 pnorm u_c
 qnorm u_c
 
+**using oecd country only**
+//altruism pvalue = 0.053
+//residual doesn't fit normal
+preserve
+drop if oecd == 0
+xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
+predict ui_oecd, ue
+reg funding_capita ui_oecd i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
+predict u_r_oecd, re
+kdensity ui_oecd, normal
+
+restore
+
+**using g20 country only**
+preserve
+drop if g20 == 0
+xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
+predict ui_g20, ue
+reg funding_capita ui_g20 i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
+predict u_r_g20, re
+kdensity ui_g20, normal
+
+restore
+
+**using oda doner country only**
+//altruism pvalue = 0.046
+//residual doesn't fit normal
+preserve
+drop if oda_int == 0
+xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
+predict ui_oda, ue
+reg funding_capita ui_oda i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
+predict u_r_oda, re
+kdensity ui_oda, normal
+
+restore
+
+**using non aid received country only**
+preserve
+drop if aid == 1
+xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
+predict ui_aid, ue
+reg funding_capita ui_aid i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
+predict u_r_aid, re
+kdensity ui_aid, normal
+
+restore
+
+**using high income country only**
+//altruism pvalue = 0.046
+//residual doesn't fit normal
+preserve
+drop if income != 1
+xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
+predict ui_in, ue
+reg funding_capita ui_in i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
+predict u_r_in, re
+kdensity ui_in, normal
+
+restore
