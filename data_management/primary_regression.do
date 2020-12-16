@@ -1,8 +1,8 @@
 clear all
 // Specify path to project root.
-local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
-* local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
-*local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
+*local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+*local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
+local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
 
 // *data* folder.
 local PATH_DATA "`PATH_PROJECT_ROOT'/data"
@@ -20,7 +20,7 @@ import delimited "`PATH_DATA'/result_long.csv"
 egen isonum = group(isocode)
 egen income = group(income_type)
 egen region_num = group(region)
-gen funding_capita = funding/gdpcapita
+gen funding_capita = funding/pop
 
 xtset isonum year
 
@@ -87,7 +87,7 @@ ivreg2  funding_gdp (altruism = demo) i.income i.year i.region_num posrecip risk
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
 //xtgls is for T>N panel
-xtreg funding_gdp demo govexpense pop gdp gni,re vce(cluster isonum)
+xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
 
 **predict res**
 //ui: the random-error component
@@ -142,8 +142,7 @@ pnorm u_c
 qnorm u_c
 
 **using oecd country only**
-//altruism pvalue = 0.053
-//residual doesn't fit normal
+
 preserve
 drop if oecd == 0
 xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
@@ -166,8 +165,7 @@ kdensity ui_g20, normal
 restore
 
 **using oda doner country only**
-//altruism pvalue = 0.046
-//residual doesn't fit normal
+
 preserve
 drop if oda_int == 0
 xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
@@ -190,8 +188,7 @@ kdensity ui_aid, normal
 restore
 
 **using high income country only**
-//altruism pvalue = 0.046
-//residual doesn't fit normal
+
 preserve
 drop if income != 1
 xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
