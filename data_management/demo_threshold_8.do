@@ -26,83 +26,31 @@ xtset isonum year
 
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
-
+drop if demo_mean < 8
 
 log using "`PATH_TABLES'/primary",replace smcl
-**panel**
-**panel data within approach on time-invariant variables**
-//for panel xtreg with vce(robust) is not an valid option
-//xtgls is for T>N panel
-xtreg funding_capita demo govexpense pop gdp gni,re vce(cluster isonum)
 
-**predict res for re**
-//ui: the random-error component
-//eit: the overall error component 
-*predict ui, ue
-*predict eit, e
-
-**testing re or fe**
-//H0: fixed effect should be used
-//result using fe
-//only work after re
-xtoverid
 
 **panel fe**
-xtreg funding_capita demo govexpense pop gdp gni,fe vce(cluster isonum)
+xtreg funding_capita govexpense demo pop gdp gni,fe vce(cluster isonum)
 
 **predict res for fe**
 predict u, u
 
-
-**check serial correlation in error term**
-//xttest2 check cross sectional dependence, but is biased under N > T
-//xtcsd H0:uit is independent and i.i.d. over t & section
-//using unbalanced data break xtcsd
-//result suggest y correlated across panel groups.
-xtcdf funding_capita u
-
-**simplified white test for hetero**
-//xttest3 check for hetro, perform poorly under N>T, not work in re
-//H0: σ2i = σ2
-//result  cannot H0, data could be homo
-//if cross products are introduced then it test hetero & specification bias
-//source:https://economics.stackexchange.com/questions/11221/testing-for-heteroskedasticity-in-panel-data-vs-time-series
-predict xb, xb
-gen uhatsq = u^2
-reg uhatsq c.xb##c.xb, vce(cl isonum)
-testparm c.xb##c.xb
-
-
-*robust estimate time invariant*
-reg funding_capita u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(robust) 
-predict u_r, re
 
 *cluster*
 reg funding_capita u i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum) 
 predict u_c, re
 
 
-**checking density of the residual**
-//obviously not normal, especially in middle range
-//pnorm sensitive to non-normality in middle range
-//qnorm sensitive to non-normality in tails
-//eit close to normal but ui is not
-kdensity u, normal
-
-kdensity u_r, normal
-kdensity u_c, normal
-pnorm u_c
-qnorm u_c
 
 **using oecd country only**
-
 preserve
 drop if oecd == 0
 xtreg funding_capita demo govexpense pop gdp gni,fe vce(cluster isonum)
 predict ui_oecd, u
 reg funding_capita ui_oecd i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
 predict u_r_oecd, re
-kdensity ui_oecd, normal
 
 restore
 
@@ -113,7 +61,6 @@ xtreg funding_capita demo govexpense pop gdp gni,fe vce(cluster isonum)
 predict ui_g20, u
 reg funding_capita ui_g20 i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
 predict u_r_g20, re
-kdensity ui_g20, normal
 
 restore
 
@@ -125,7 +72,6 @@ xtreg funding_capita demo govexpense pop gdp gni,fe vce(cluster isonum)
 predict ui_oda, u
 reg funding_capita ui_oda i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
 predict u_r_oda, re
-kdensity ui_oda, normal
 
 restore
 
@@ -136,7 +82,6 @@ xtreg funding_capita demo govexpense pop gdp gni,fe vce(cluster isonum)
 predict ui_aid, u
 reg funding_capita ui_aid i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
 predict u_r_aid, re
-kdensity ui_aid, normal
 
 restore
 
@@ -148,11 +93,10 @@ xtreg funding_capita demo govexpense pop gdp gni,fe vce(cluster isonum)
 predict ui_in, u
 reg funding_capita ui_in i.income i.year i.region_num altruism  posrecip risktaking patience trust negrecip demo_mean pop_mean govexpense_mean gdp_mean gni_mean, vce(cluster isonum)  
 predict u_r_in, re
-kdensity ui_in, normal
 
 restore
 
 
 log close
 
-translate "`PATH_TABLES'/primary.smcl" "`PATH_TABLES'/primary.pdf"
+translate "`PATH_TABLES'/primary.smcl" "`PATH_TABLES'/demo_threshold_8.pdf"

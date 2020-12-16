@@ -1,13 +1,11 @@
 This respiratory stores project for the course Research Module in Applied Microeconomics. The project is still in progress. It is also possible to view through _mybinder_. The project is connected to Travis to ensure the reproductivity.
 
-Dataset used in the project is zipped as data.zip. auxilary.py stores function that is used. environment request is in env.yml. cleaning.py is export from cleaning.ipynb. 
+Dataset used in the project is zipped as data.zip. auxilary.py stores function that is used. environment request is in env.yml. 
 
  <!-- it could also be downloaded at [here.](https://drive.google.com/drive/folders/1MG2aVRWMfzrvAibqx-r2NlfRDPcZ9Bc-?usp=sharing)  -->
 
 
-[![Build Status](https://travis-ci.com/amanda8412383/research-module.svg?branch=main)](https://travis-ci.com/amanda8412383/research-module)
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/amanda8412383/research-module/HEAD)
+[![Build Status](https://travis-ci.com/amanda8412383/research-module.svg?branch=main)](https://travis-ci.com/amanda8412383/research-module)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/amanda8412383/research-module/HEAD)
 
 
 ---
