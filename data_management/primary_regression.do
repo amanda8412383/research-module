@@ -30,27 +30,39 @@ list income_type income in 48/56, sepby(income_type)
 **ols**
 *basic ols*
 reg funding_gdp altruism
+eststo
 *ols with cluster*
 reg funding_gdp altruism, vce(cluster isonum)
+eststo
 *ols with demo*
 reg funding_gdp altruism demo, vce(cluster isonum)
+eststo
 *ols with controls*
 reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+eststo
 *reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+esttab
+eststo clear
 
 
 **ols with funding per capita**
 *basic ols*
 reg funding_capita altruism
+eststo
 *ols with cluster*
 reg funding_capita altruism, vce(cluster isonum)
+eststo
 *ols with demo*
 reg funding_capita altruism demo, vce(cluster isonum)
+eststo
 *ols with controls*
 reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+eststo
+esttab
+eststo clear
 
 
-**ols with funding per capita**
+**ols with funding relative to government size**
 *basic ols*
 reg funding_govsize altruism
 *ols with cluster*
