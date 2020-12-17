@@ -1,4 +1,4 @@
-This respiratory stores project for the course Research Module in Applied Microeconomics. The project is still in progress. It is also possible to view through _mybinder_. The project is connected to Travis to ensure the reproductivity.
+This respiratory stores project for the course Research Module in Applied Microeconomics, discussing whether the altruism score in global preference survey data affects the general funding provided countries based on their democratization level. The project is still in progress. It is also possible to view through _mybinder_. The project is connected to Travis to ensure the reproductivity.
 
 Dataset used in the project is zipped as data.zip. auxilary.py stores function that is used. environment request is in env.yml. 
 
@@ -7,6 +7,7 @@ Dataset used in the project is zipped as data.zip. auxilary.py stores function t
 
 [![Build Status](https://travis-ci.com/amanda8412383/research-module.svg?branch=main)](https://travis-ci.com/amanda8412383/research-module)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/amanda8412383/research-module/HEAD)
 
+![altruism](https://user-images.githubusercontent.com/34471768/102538859-29382f80-40ad-11eb-8d82-8d365f7fdbbb.png)
 
 ---
  
