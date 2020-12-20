@@ -27,14 +27,18 @@ xtset isonum year
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
 
+**test for MCAR**
+//p-value =0.000 suggests e strong evidence of correlation
+missingness is associated with age
+gen gni_dummy = 1 if gni != .
+replace gni_dummy = 0 if gni_dummy == .
+tab funding_capita gni_dummy, chi2 row
+tab altruism gni_dummy, chi2 row
 
-*log using "`PATH_TABLES'/primary",replace smcl
-
-**panel**
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
 //xtgls is for T>N panel
-xtreg funding_capita demo govexpense gdpcapita ,re vce(cluster isonum)
+*xtreg funding_capita demo govexpense gdpcapita ,re vce(cluster isonum)
 
 **predict res for re**
 //ui: the random-error component
@@ -46,7 +50,11 @@ xtreg funding_capita demo govexpense gdpcapita ,re vce(cluster isonum)
 //H0: fixed effect should be used
 //result using fe
 //only work after re
-xtoverid
+*xtoverid
+
+
+
+*log using "`PATH_TABLES'/primary",replace smcl
 
 **panel fe**
 xtreg funding_capita demo govexpense  gdpcapita,fe vce(cluster isonum)
