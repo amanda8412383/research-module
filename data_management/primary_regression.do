@@ -13,7 +13,6 @@ local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 
 // load the dataset
 import delimited "`PATH_DATA'/result_long.csv"
-*use "`PATH_DATA'/result_formatted"
 
 
 **change variable type
@@ -27,13 +26,37 @@ xtset isonum year
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
 
-**test for MCAR**
-//p-value =0.000 suggests e strong evidence of correlation
-missingness is associated with age
+
+**multiple imputation gni**
+*identify potential auxiliary variables*
+//rule of thumb  0.4 correlation threshold
+//(Allison, 2012)
+pwcorr gni income region_num pledge altruism trust g20 negrecip aid patience posrecip oecd risktaking pledge  funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita pop oda, obs
+*testing MCAR of missing data*
+//altruism has significant different group mean
 gen gni_dummy = 1 if gni != .
-replace gni_dummy = 0 if gni_dummy == .
-tab funding_capita gni_dummy, chi2 row
-tab altruism gni_dummy, chi2 row
+replace gni_dummy = 0 if gni_dummy ==.
+ttest funding_capita, by(gni_dummy)
+ttest altruism, by(gni_dummy)
+
+*setting style*
+mi set mlong
+*examine*
+mi misstable summarize gni income  patience govexpense  gdpcapita
+mi misstable pattern gni income  patience govexpense  gdpcapita
+
+*identifies missing variables*
+mi register imputed gni
+*specifies imputation model*
+//multivariate normal distribution
+mi impute reg gni income  patience govexpense  gdpcapita, add(10) rseed (0) force
+*analysing the imputed datasets*
+//https://www.statalist.org/forums/forum/general-stata-discussion/general/1337338-residuals-plot-mi
+//https://stats.idre.ucla.edu/stata/seminars/mi_in_stata_pt1_new/
+//https://www.researchgate.net/post/Is_it_appropriate_to_use_multiple_imputations_MI_to_fill_up_missing_years_for_the_Gini_index_on_SSA_countries
+mi estimate:xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita,fe vce(cluster isonum)
+*mi predict re(u_mi), using miestfile
+
 
 **panel data within approach on time-invariant variables**
 //for panel xtreg with vce(robust) is not an valid option
@@ -54,10 +77,16 @@ tab altruism gni_dummy, chi2 row
 
 
 
-*log using "`PATH_TABLES'/primary",replace smcl
+log using "`PATH_TABLES'/primary",replace smcl
 
 **panel fe**
+
 xtreg funding_capita demo govexpense  gdpcapita,fe vce(cluster isonum)
+
+**panel fe with subgroups of demos**
+
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita,fe vce(cluster isonum)
+
 
 **predict res for fe**
 predict u, u
@@ -108,7 +137,7 @@ qnorm u_c
 
 preserve
 drop if oecd == 0
-xtreg funding_capita demo govexpense  gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_oecd, u
 bysort isonum: egen u_bar_oecd = mean(ui_oecd)
 reg u_bar_oecd  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -121,7 +150,7 @@ restore
 
 preserve
 drop if g20 == 0
-xtreg funding_capita demo govexpense  gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_g20, u
 bysort isonum: egen u_bar_g20 = mean(ui_g20)
 reg u_bar_g20  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -132,7 +161,7 @@ restore
 **using oda doner country only**
 preserve
 drop if oda_int == 0
-xtreg funding_capita demo govexpense  gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_oda, u
 bysort isonum: egen u_bar_oda = mean(ui_oda)
 reg u_bar_oda  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -144,7 +173,7 @@ restore
 **using non aid received country only**
 preserve
 drop if aid == 1
-xtreg funding_capita demo govexpense  gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_aid, u
 bysort isonum: egen u_bar_aid = mean(ui_aid)
 reg u_bar_aid  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -158,7 +187,7 @@ restore
 **using high income country only**
 preserve
 drop if income != 1
-xtreg funding_capita demo govexpense  gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_in, u
 bysort isonum: egen u_bar_in = mean(ui_in)
 reg u_bar_in  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  

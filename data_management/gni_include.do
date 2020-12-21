@@ -13,8 +13,6 @@ local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 
 // load the dataset
 import delimited "`PATH_DATA'/result_long.csv"
-*use "`PATH_DATA'/result_formatted"
-
 
 **change variable type
 egen isonum = group(isocode)
@@ -32,7 +30,12 @@ log using "`PATH_TABLES'/primary",replace smcl
 
 
 **panel fe**
+
 xtreg funding_capita demo govexpense gni gdpcapita,fe vce(cluster isonum)
+
+**panel fe with subgroups of demos**
+
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita,fe vce(cluster isonum)
 
 **predict res for fe**
 predict u, u
@@ -54,7 +57,7 @@ predict u_c, re
 
 preserve
 drop if oecd == 0
-xtreg funding_capita demo govexpense gni gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
 predict ui_oecd, u
 bysort isonum: egen u_bar_oecd = mean(ui_oecd)
 reg u_bar_oecd  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -67,7 +70,7 @@ restore
 
 preserve
 drop if g20 == 0
-xtreg funding_capita demo govexpense gni gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
 predict ui_g20, u
 bysort isonum: egen u_bar_g20 = mean(ui_g20)
 reg u_bar_g20  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -78,7 +81,7 @@ restore
 **using oda doner country only**
 preserve
 drop if oda_int == 0
-xtreg funding_capita demo govexpense gni gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
 predict ui_oda, u
 bysort isonum: egen u_bar_oda = mean(ui_oda)
 reg u_bar_oda  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -90,7 +93,7 @@ restore
 **using non aid received country only**
 preserve
 drop if aid == 1
-xtreg funding_capita demo govexpense gni gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
 predict ui_aid, u
 bysort isonum: egen u_bar_aid = mean(ui_aid)
 reg u_bar_aid  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
@@ -104,7 +107,7 @@ restore
 **using high income country only**
 preserve
 drop if income != 1
-xtreg funding_capita demo govexpense gni gdpcapita ,fe vce(cluster isonum)
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
 predict ui_in, u
 bysort isonum: egen u_bar_in = mean(ui_in)
 reg u_bar_in  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
