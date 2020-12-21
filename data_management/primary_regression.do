@@ -199,4 +199,4 @@ restore
 
 log close
 
-*translate "`PATH_TABLES'/primary.smcl" "`PATH_TABLES'/primary.pdf"
+translate "`PATH_TABLES'/primary.smcl" "`PATH_TABLES'/primary.pdf"
