@@ -27,35 +27,7 @@ xtset isonum year
 *list income_type income in 48/56, sepby(income_type)
 
 
-**multiple imputation gni**
-*identify potential auxiliary variables*
-//rule of thumb  0.4 correlation threshold
-//(Allison, 2012)
-pwcorr gni income region_num pledge altruism trust g20 negrecip aid patience posrecip oecd risktaking pledge  funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita pop oda, obs
-*testing MCAR of missing data*
-//altruism has significant different group mean
-gen gni_dummy = 1 if gni != .
-replace gni_dummy = 0 if gni_dummy ==.
-ttest funding_capita, by(gni_dummy)
-ttest altruism, by(gni_dummy)
 
-*setting style*
-mi set mlong
-*examine*
-mi misstable summarize gni income  patience govexpense  gdpcapita
-mi misstable pattern gni income  patience govexpense  gdpcapita
-
-*identifies missing variables*
-mi register imputed gni
-*specifies imputation model*
-//multivariate normal distribution
-mi impute reg gni income  patience govexpense  gdpcapita, add(10) rseed (0) force
-*analysing the imputed datasets*
-//https://www.statalist.org/forums/forum/general-stata-discussion/general/1337338-residuals-plot-mi
-//https://stats.idre.ucla.edu/stata/seminars/mi_in_stata_pt1_new/
-//https://www.researchgate.net/post/Is_it_appropriate_to_use_multiple_imputations_MI_to_fill_up_missing_years_for_the_Gini_index_on_SSA_countries
-mi estimate:xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita,fe vce(cluster isonum)
-*mi predict re(u_mi), using miestfile
 
 
 **panel data within approach on time-invariant variables**
@@ -200,3 +172,47 @@ restore
 log close
 
 translate "`PATH_TABLES'/primary.smcl" "`PATH_TABLES'/primary.pdf"
+
+**multiple imputation gni**
+*identify potential auxiliary variables*
+//rule of thumb  0.4 correlation threshold
+//(Allison, 2012)
+pwcorr gni income region_num pledge altruism trust g20 negrecip aid patience posrecip oecd risktaking pledge  funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita pop oda, obs
+*testing MCAR of missing data*
+//altruism has significant different group mean
+gen gni_dummy = 1 if gni != .
+replace gni_dummy = 0 if gni_dummy ==.
+ttest funding_capita, by(gni_dummy)
+ttest altruism, by(gni_dummy)
+
+*setting style*
+mi set flong
+*examine*
+mi misstable summarize gni income  patience govexpense  gdpcapita
+mi misstable pattern gni income  patience govexpense  gdpcapita
+*setting panel*
+mi xtset isonum year
+*identifies missing variables*
+mi register imputed gni
+*specifies imputation model*
+//multivariate normal distribution
+//due to missing values (scarce) in x, force option is needed
+mi impute reg gni income patience govexpense gdpcapita, add(10) rseed (0) dots force
+*analysing the imputed datasets*
+cd "`PATH_TABLES'"
+mi estimate, saving(miest):xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita,fe vce(cluster isonum)
+*predict yhat*
+mi predict xb_mi using miest, xb 
+*obtain residual*
+//mi xeq could conduct any one time operation on mi dataset
+//using the first dataset as our estimation
+mi xeq 0: gen u_mi = funding_capita - xb_mi 
+mi xeq 0: replace u_mi = . if xb_mi == .
+mi xeq 0: bysort isonum: egen u_bar_mi = mean(u_mi)
+mi xeq 0: reg u_bar_mi i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+mi xeq 0: predict u_miols, re
+mi xeq 0: kdensity u_miols, normal
+*generation check*
+mi misstable pattern gni xb_mi
+
+
