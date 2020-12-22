@@ -1,3 +1,4 @@
+//this file store the early version of ols & iv regression
 clear all
 // Specify path to project root.
 *local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
