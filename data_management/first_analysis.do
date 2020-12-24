@@ -17,7 +17,43 @@ local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 
 
 // load the dataset
-use "`PATH_DATA'/result_formatted"
+*use "`PATH_DATA'/result_formatted"
+import delimited "`PATH_DATA'/result_long.csv"
+
+
+// generate variable for humanitarian aid contribution per GDP and
+bysort country: egen avg_funding_gdp = mean(funding_gdp / (year>=2010))
+label var avg_funding_gdp "Avg. Humanitarian Aid Funding per GDP"
+
+// generate variable for humanitarian aid contribution per capita
+gen funding_capita = funding/pop
+label var funding_capita "Humanitarian Aid Funding per Capita"
+
+//  generate variable for mean humanitarian aid contribution per capita over years 2010-2019
+bysort country: egen avg_funding_capita = mean(funding_capita / (year>=2010))
+label var avg_funding_capita "Avg. Humanitarian Aid Funding per Capita"
+
+//  generate variable for mean Net Official Development Assistance over years 2010-2019
+bysort country: egen avg_oda = mean(oda / (year>=2010))
+label var avg_oda "Avg. Net Official Development Assistance"
+
+// generate variable for humanitarian aid contribution relative to government size
+gen funding_govsize = funding/govexpense
+label var funding_govsize "Humanitarian Aid Funding relative to Government Size"
+
+//  generate variable for mean humanitarian aid contribution relative to government size over years 2010-2019
+bysort country: egen avg_funding_govsize = mean(funding_govsize / (year>=2010))
+label var avg_funding_govsize "Avg. Humanitarian Aid Funding rel. to Government Size"
+
+// generate variable with democracy index categories
+gen demo_categories = 1 
+replace demo_categories = 2 if demo >=4
+replace demo_categories = 3 if demo >=6
+replace demo_categories = 4 if demo >=8
+label var demo_categories "Democracy Index Categories"
+label define demo_cat 1 "Authoritarian regime" 2 "Hybrid regime" 3 "Flawed democracy" 4 "Full democracy"
+label val demo_categories demo_cat
+
 
 // plot altruism and humanitarian aid contributions
 graph twoway (scatter funding altruism, msize(small)) (lfit funding altruism), by(year) ytitle(Humanitarian Aid Contribution) xtitle(Altruism)
