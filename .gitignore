@@ -12,7 +12,7 @@ tables/
 !.travis.yml
 
 notes.ipynb
-panel_test.ipynb
+panel.ipynb
 todo.txt
 
 
