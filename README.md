@@ -10,6 +10,7 @@ _mybinder_ is also a possible viewing option. To ensure the reproductivity, this
 ![altruism](https://user-images.githubusercontent.com/34471768/102538859-29382f80-40ad-11eb-8d82-8d365f7fdbbb.png)
 
 ---
+[#3394FF]: https://via.placeholder.com/15/3394FF/000000?text=+
  
 ### ![#3394FF](https://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**data_management :**</span> 
 containing stata do file, cooperatively contributed by the team
@@ -28,7 +29,7 @@ merging the data that is needed for our research project, using countries as the
 ---
 
 ### ![#FA8AAB](https://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**panel.ipynb :**</span> 
-applying FEF model in [Pesaran, M. Hashem; Zhou, Qiankun (2014) : Estimation of Time-invariant Effects in Static Panel Data Models] (https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2493312) to estimate the effect of time-invariant variables, altruism in the panel data.
+applying FEF model in [Pesaran, M. Hashem; Zhou, Qiankun (2014) : Estimation of Time-invariant Effects in Static Panel Data Models](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2493312) to estimate the effect of time-invariant variables, altruism in the panel data.
 
 this id the final model used in the project, I wrote this in Stata first and rewrote it in python to maintain the completeness of the project.
 
