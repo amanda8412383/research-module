@@ -18,7 +18,7 @@ containing stata do file, cooperatively contributed by the team
 ---
 
 
-### ![#fa8aab](http://via.placeholder.com/15/fa8aab/000000?text=+) <span style="color:#FA8AAB">**Cleaning.ipynb :**</span> 
+### ![#fa8aab](http://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**Cleaning.ipynb :**</span>
 merging the data that is needed for our research project, using countries as the key, variable explanations could be viewed here.  
 
 ---
@@ -36,7 +36,7 @@ this id the final model used in the project, I wrote this in Stata first and rew
 
 --- 
  
-### ![#3394FF](http://via.placeholder.com/15/3394ff/000000?text=+) <span style="color:#3394FF">**timeseries_check.ipynb :**</span> 
+### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**timeseries_check.ipynb :**</span> 
 this notebook is created during attempts to fit models and explore data. Checking the time correlation by plotting and tests.
 
 ---
