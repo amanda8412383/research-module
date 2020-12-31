@@ -12,8 +12,6 @@ tables/
 !.travis.yml
 
 notes.ipynb
-panel.ipynb
-todo.txt
 
 
 # C extensions
