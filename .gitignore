@@ -12,7 +12,7 @@ tables/
 !.travis.yml
 
 notes.ipynb
-
+imputation.ipynb
 
 # C extensions
 *.so

@@ -11,7 +11,7 @@ _mybinder_ is also a possible viewing option. To ensure the reproductivity, this
 
 ---
  
-### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**data_management :**</span> 
+### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**Data_management :**</span> 
 containing stata do file, cooperatively contributed by the team
 
 
@@ -23,31 +23,36 @@ merging the data that is needed for our research project, using countries as the
 
 ---
  
-### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**wide_to_long :**</span> 
+### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**Wide_to_long :**</span> 
  transform data from wide to long and setting up variables to suit the preference of stata
 
 ---
 
-### ![#FA8AAB](http://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**panel.ipynb :**</span> 
+### ![#FA8AAB](http://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**Panel.ipynb :**</span> 
 applying FEF model in [Pesaran, M. Hashem; Zhou, Qiankun (2014) : Estimation of Time-invariant Effects in Static Panel Data Models](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2493312) to estimate the effect of time-invariant variables, altruism in the panel data.
 
-this id the final model used in the project, I wrote this in Stata first and rewrote it in python to maintain the completeness of the project.
+this id the final model used in the project.
 
 
 --- 
- 
-### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**timeseries_check.ipynb :**</span> 
-this notebook is created during attempts to fit models and explore data. Checking the time correlation by plotting and tests.
+
+### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**Imputation.ipynb :**</span> 
+
+In this notebook, 3 different types of imputations are applied to deal with a large amount of missing Gini index.
 
 ---
 
- 
-### ![#FA8AAB](http://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**gmmiv.ipynb :**</span> 
-this notebook is created during attempts to fit models. an attempt to apply OLS, 2SLS and GMM models in package linearmodels on our data
+### ![#FA8AAB](http://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**Timeseries_check.ipynb :**</span> 
+this notebook is created during attempts to fit models and explore data. Checking the time correlation by plotting and tests.
 
 ---
 
 ### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**EDA.ipynb :**</span> 
 this notebook is created during exploring data. EDA stands for primarily exploratory data analysis. Containing plots of relationship between different sets of variables by years.
+
+---
+
+### ![#FA8AAB](http://via.placeholder.com/15/FA8AAB/000000?text=+) <span style="color:#FA8AAB">**Gmmiv.ipynb :**</span> 
+this notebook is created during attempts to fit models. an attempt to apply OLS, 2SLS and GMM models in package linearmodels on our data
 
 ---
