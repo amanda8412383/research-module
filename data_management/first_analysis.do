@@ -20,10 +20,18 @@ local PATH_TABLES "`PATH_PROJECT_ROOT'/tables"
 *use "`PATH_DATA'/result_formatted"
 import delimited "`PATH_DATA'/result_long.csv"
 
+// generate variable for mean funding
+bysort country: egen avg_funding = mean(funding / (year>=2010))
+label var avg_funding "Avg. Humanitarian Aid Funding"
 
 // generate variable for humanitarian aid contribution per GDP and
 bysort country: egen avg_funding_gdp = mean(funding_gdp / (year>=2010))
 label var avg_funding_gdp "Avg. Humanitarian Aid Funding per GDP"
+
+// generate variable for mean humanitarian aid contribution in Billion
+gen avg_funding_bn=avg_funding/1000000000
+label var avg_funding_bn "Avg. Humanitarian Aid Funding in Billion"
+
 
 // generate variable for humanitarian aid contribution per capita
 gen funding_capita = funding/pop
@@ -58,6 +66,16 @@ label val demo_categories demo_cat
 // plot altruism and humanitarian aid contributions
 graph twoway (scatter funding altruism, msize(small)) (lfit funding altruism), by(year) ytitle(Humanitarian Aid Contribution) xtitle(Altruism)
 graph export "`PATH_FIGURES'/funding_altruism_scatter.pdf", replace
+
+// Plot mean humanitarian aid contribution on altruism.
+graph twoway ///
+	(scatter avg_funding_bn altruism if year==2019 & oecd==0, msize(small) mcolor(midblue)) ///
+	(scatter avg_funding_bn altruism if year==2019 & oecd==1, msize(small) mcolor(red)) ///
+	(lfit avg_funding_bn altruism if year==2019 & oecd==0, lcolor(midblue)) ///
+	(lfit avg_funding_bn altruism if year==2019 & oecd==1, lcolor(red)), ///
+	ytitle("Avg. Humanitarian Aid Contribution" "in Billion (2010-19)", height(10)) xtitle(Altruism) ///
+	legend(label(1 non OECD) label(2 OECD))
+graph export "`PATH_FIGURES'/avg_funding_altruism_scatter.pdf", replace
 
 
 // plot altruism and humanitarian aid contributions per GDP
