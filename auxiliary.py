@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from linearmodels.panel import PooledOLS
 sns.set_theme(style="ticks")
 
 def regplot(x_var, y_var, df):
@@ -59,4 +61,60 @@ def sample3(col_name, df):
     print(col_name)
     print(mean)
     print(var)
+
+
+class Quick_reg(object):
+    #set variable
+    def __init__(self):
+        self.x = ['altruism', 'posrecip', 'risktaking', 'patience', 'trust', 'negrecip']
+        self.x_str = ['income_type', 'region']
+        self.x_dummy = ['oecd', 'g20', 'oda_int', 'aid']
+        self.x_year = ['demo_electoral', 'demo_gov', 'demo_participate', 'demo_culture', 'demo_liberty', 'govexpense',  'gdpcapita', 'gni']
+
+        self.x_dict = {i: 'median' for i in (self.x + self.x_dummy)}
+        self.x_dict['res'] = 'mean'
+
+    def reg_with_imputed(self, df_impute, impute):
+        """this function accept a dataframe an array of imputed variable and perform the major analysis in panel.ipynb, print out the results
+        """
+
+        #flip matrix back before flatten
+        #needed to add values to ensure order is correct
+        long_gni = df_impute.assign(gni = pd.Series(impute.T.flatten()).values)
+
+        #basic cleaning
+        long_c = sm.add_constant(long_gni)
+        long_y = long_c.assign(funding_capita= long_c['funding']/long_c['pop'])
+
+        long_index = long_y.set_index(['isocode', 'year'])
+        long_select = long_index[['funding_capita'] + self.x + self.x_str + self.x_dummy + self.x_year]
+        df = long_select.dropna()
+
+        #FEF step 1
+        mod = PooledOLS(df.funding_capita, df[self.x_year])
+        pooled_res = mod.fit(cov_type='clustered', cluster_entity=True, cluster_time=True, entity_effects=True)
+
+        #FEF step 2
+        df_yhat = df.assign( yhat=pooled_res.predict())
+        df_u = df_yhat.assign( res=df_yhat.funding_capita - df_yhat.yhat)
+        df2 = df_u.groupby(['isocode'] + self.x_str).agg(self.x_dict).reset_index().set_index('isocode')  
+
+        #FEF step 3
+        df_dummy = pd.get_dummies(df2)
+
+        x_list = df_dummy.columns.to_list()
+        x_list.remove('res')
+        x_list.remove('income_type_Low income')
+        x_list.remove('region_Sub-Saharan Africa')
+
+        mod = sm.OLS(df_dummy['res'], df_dummy[x_list ])
+        res = mod.fit()
+        print(res.summary())
+
+        #predict u
+        df2_yhat = df_dummy.assign( yhat=res.predict())
+        df2_u = df2_yhat.assign( res=df2_yhat.res - df2_yhat.yhat)
+        df2_u.res.plot.kde()
+
+
 
