@@ -66,30 +66,42 @@ def sample3(col_name, df):
 
 class Quick_reg(object):
     #set variable
-    def __init__(self):
-        self.x = ['altruism', 'posrecip', 'risktaking', 'patience', 'trust', 'negrecip']
-        self.x_str = ['income_type', 'region']
-        self.x_dummy = ['oecd', 'g20', 'oda_int', 'aid']
-        self.x_year = ['demo_electoral', 'demo_gov', 'demo_participate', 'demo_culture', 'demo_liberty', 'govexpense',  'gdpcapita', 'gni']
+    x = ['altruism', 'posrecip', 'risktaking', 'patience', 'trust', 'negrecip']
+    x_str = ['income_type', 'region']
+    x_dummy = ['oecd', 'g20', 'oda_int', 'aid']
+    x_dict = {i: 'median' for i in (x + x_dummy)}
+    x_dict['res'] = 'mean'
 
-        self.x_dict = {i: 'median' for i in (self.x + self.x_dummy)}
-        self.x_dict['res'] = 'mean'
+    def __init__(self, gni):
+        """this function allows flexibility to include or exclude gini index"""
+        self.x_year = ['demo_electoral', 'demo_gov', 'demo_participate', 'demo_culture', 'demo_liberty', 'govexpense',  'gdpcapita'] + gni
+        self.label = 'res'
+
 
     def reg_with_imputed(self, df_impute, impute):
-        """this function accept a dataframe an array of imputed variable and perform the major analysis in panel.ipynb, print out the results
-        """
-
+        """this function accept a dataframe & an array of imputed variable and passed the dataframe with replaced gni column into reg function"""
         #flip matrix back before flatten
         #needed to add values to ensure order is correct
         long_gni = df_impute.assign(gni = pd.Series(impute.T.flatten()).values)
+        return self.auto_reg(long_gni)
 
+    def clean(self, df):
+        """clean the data for reg"""
         #basic cleaning
-        long_c = sm.add_constant(long_gni)
+        long_c = sm.add_constant(df)
         long_y = long_c.assign(funding_capita= long_c['funding']/long_c['pop'])
 
         long_index = long_y.set_index(['isocode', 'year'])
         long_select = long_index[['funding_capita'] + self.x + self.x_str + self.x_dummy + self.x_year]
-        df = long_select.dropna()
+
+        return long_select
+
+    
+
+    def step2_add_dummy(self, df):
+        """separate major analysis allows flexibility to access mid-result and perform conditional query"""
+        #drop na
+        df = df.dropna()
 
         #FEF step 1
         mod = PooledOLS(df.funding_capita, df[self.x_year])
@@ -103,19 +115,33 @@ class Quick_reg(object):
         #FEF step 3
         df_dummy = pd.get_dummies(df2)
 
-        x_list = df_dummy.columns.to_list()
-        x_list.remove('res')
-        x_list.remove('income_type_Low income')
-        x_list.remove('region_Sub-Saharan Africa')
 
-        mod = sm.OLS(df_dummy['res'], df_dummy[x_list ])
+        return df_dummy
+
+    def result(self, df):
+        """this function operate on df return from step2_add_dummy,then print out the result"""
+
+        #avoid collinearity
+        x_list = df.columns.to_list()
+        x_list.remove('res')
+        if 'income_type_Low income' in x_list:
+            x_list.remove('income_type_Low income')
+        if 'income_type_Low income' in x_list:
+            x_list.remove('region_Sub-Saharan Africa')
+
+        #FEF step 3
+        mod = sm.OLS(df['res'], df[x_list])
         res = mod.fit()
         print(res.summary())
 
         #predict u
-        df2_yhat = df_dummy.assign( yhat=res.predict())
+        df2_yhat = df.assign(yhat=res.predict())
         df2_u = df2_yhat.assign( res=df2_yhat.res - df2_yhat.yhat)
-        df2_u.res.plot.kde()
-
-
-
+        return df2_u.res.plot.kde(label=self.label).legend()
+    
+    def auto_reg(self, df):
+        """this function is wrote to combine the process in the whole class"""
+        clean = self.clean(df)
+        step2 = self.step2_add_dummy(clean)
+        result = self.result(step2)
+        return result
