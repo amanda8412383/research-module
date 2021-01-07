@@ -14,7 +14,7 @@ _mybinder_ is also a possible viewing option. To ensure the reproductivity, this
 ### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**Data_management :**</span> 
 **Formatting**
 
-containing stata do file that is used to generate tables and graphs in the report, this file is cooperatively contributed by the team.
+containing stata do file that is used to generate tables and graphs in the report, this folder is cooperatively contributed by the team.
 
 
 ---
