@@ -67,6 +67,11 @@ label define demo_cat 1 "Authoritarian regime" 2 "Hybrid regime" 3 "Flawed democ
 label val demo_categories demo_cat
 
 
+// summary statistics
+table country, contents(mean altruism mean funding mean demo)
+
+
+
 // plot altruism and humanitarian aid contributions
 graph twoway (scatter funding altruism, msize(small)) (lfit funding altruism), by(year) ytitle(Humanitarian Aid Contribution) xtitle(Altruism)
 graph export "`PATH_FIGURES'/funding_altruism_scatter.pdf", replace
