@@ -27,7 +27,7 @@ Merging the data that is needed for our research project, using countries as the
 
 ---
  
-### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**Wide_to_long :**</span> 
+### ![#3394FF](http://via.placeholder.com/15/3394FF/000000?text=+) <span style="color:#3394FF">**Wide_to_long.ipynb :**</span> 
 **Data processing step 2** 
  
  Transform data from wide to long and setting up variables to suit the data preference of stata.
