@@ -1,9 +1,9 @@
 //this file store the early version of ols & iv regression
 clear all
 // Specify path to project root.
-*local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 *local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
-local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
+*local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
 
 // *data* folder.
 local PATH_DATA "`PATH_PROJECT_ROOT'/data"
@@ -26,22 +26,20 @@ gen funding_capita = funding/pop
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
 
+eststo clear
 
 **ols**
 *basic ols*
-reg funding_gdp altruism
-eststo
+eststo, title("Model 1"): quietly reg funding_capita altruism
 *ols with cluster*
-reg funding_gdp altruism, vce(cluster isonum)
-eststo
+eststo, title("Model 2"): quietly reg funding_capita altruism, vce(cluster isonum)
 *ols with demo*
-reg funding_gdp altruism demo, vce(cluster isonum)
-eststo
+eststo, title("Model 3"): quietly reg funding_capita altruism demo, vce(cluster isonum)
 *ols with controls*
-reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
-eststo
-*reg funding_gdp altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
-esttab   
+eststo, title("Model 4"): quietly reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+*reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+esttab
+estout * using table2.txt, replace style(tex) cells(b(star) se ) 
 eststo clear
 
 
