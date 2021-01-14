@@ -30,16 +30,21 @@ eststo clear
 
 **ols**
 *basic ols*
-eststo, title("Model 1"): quietly reg funding_capita altruism
+eststo Model1: quietly reg funding_capita altruism
 *ols with cluster*
-eststo, title("Model 2"): quietly reg funding_capita altruism, vce(cluster isonum)
+eststo Model2: quietly reg funding_capita altruism, vce(cluster isonum)
 *ols with demo*
-eststo, title("Model 3"): quietly reg funding_capita altruism demo, vce(cluster isonum)
+eststo Model3: quietly reg funding_capita altruism demo, vce(cluster isonum)
 *ols with controls*
-eststo, title("Model 4"): quietly reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+eststo Model4: quietly reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 *reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
 esttab
-estout * using table2.txt, replace style(tex) cells(b(star) se ) 
+estout * using ols.txt, replace style(tex)  ///
+	cells(b(star fmt(3)) se(fmt(3)))	 ///
+	varlabels(altruism "Altruism" demo "Democratization Index" gni "Gini Index" _cons "Constant")  ///
+	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
+    label legend postfoot("Table 1: OLS Estimates")
+
 eststo clear
 
 
