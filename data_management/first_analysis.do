@@ -76,11 +76,11 @@ label val demo_categories demo_cat
 
 
 // summary statistics
-estpost summarize altruism funding funding_capita gdp demo gni, listwise
+estpost summarize altruism funding funding_capita gdp govexpense demo gni, 
 estout . using summarystatistics.txt, ///
 	cells("count(label(Frequency)) mean(fmt(3) label(Mean)) sd(fmt(3) label(Sd)) min(fmt(3) label(Min)) max(fmt(3) label(Max))") ///
 	replace style(tex) ///
-	varlabels(altruism "Altruism" funding "Humanitarian Aid Funding" funding_capita "Humanitarian Aid Funding per Capita" gdp "GDP" demo "Democratization Index" gni "Gini Index")  ///
+	varlabels(altruism "Altruism" funding "Humanitarian Aid Funding" funding_capita "Humanitarian Aid Funding per Capita" gdp "GDP" govexpense "Government Expenditure" demo "Democratization Index" gni "Gini Index")  ///
     label legend postfoot("Summary Statistics")
 
 
