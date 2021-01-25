@@ -177,13 +177,13 @@ predict u_r_in, re
 *kdensity ui_in, normal
 
 restore
-estout Baseline OECD G20 Doner Non_Aid High_Income using fe.txt, replace style(tex)  ///
+estout Baseline OECD G20 Doner Non_Aid High_Income using firststage.txt, replace style(tex)  ///
 	cells(b(star fmt(3)) se(fmt(4) par))  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///	
 	label legend postfoot("FE")
 
-estout Cluster_Baseline Cluster_OECD Cluster_G20 Cluster_Doner Cluster_Non_Aid Cluster_High_Income using fe_cluster.txt, replace style(tex)  ///
+estout Cluster_Baseline Cluster_OECD Cluster_G20 Cluster_Doner Cluster_Non_Aid Cluster_High_Income using secondstage.txt, replace style(tex)  ///
 	cells(b(star fmt(3)) se(fmt(4) par))  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///

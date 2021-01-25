@@ -49,7 +49,16 @@ drop if year != 2018
 *predict u_r, re
 
 *cluster*
-eststo Cluster_Baseline: reg  u_bar i.income  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum) 
+eststo Cluster_Baseline: reg  u_bar i.income altruism, vce(cluster isonum) 
+eststo Cluster_region: reg  u_bar i.income i.region_num altruism, vce(cluster isonum) 
+eststo Cluster_pref: reg  u_bar i.income altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum) 
+eststo Cluster_both: reg  u_bar i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum) 
+estout Cluster_Baseline Cluster_region Cluster_pref Cluster_both using secondstagegini.txt, replace style(tex)  ///
+	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
+	varlabels(_cons "Constant")  ///	
+	label legend postfoot("Second Stage with Gini")
+
 *predict u_c, re
 
 restore
@@ -121,17 +130,17 @@ predict u_r_in, re
 *kdensity u_r_in, normal
 
 restore
-estout Baseline OECD G20 Doner Non_Aid High_Income using fe_gini.txt, replace style(tex)  ///
+estout Baseline OECD G20 Doner Non_Aid High_Income using firststagegini.txt, replace style(tex)  ///
 	cells(b(star fmt(3)) se(fmt(4) par))  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///	
 	label legend postfoot("FE with Gini")
 
-estout Cluster_Baseline Cluster_OECD Cluster_G20 Cluster_Doner Cluster_Non_Aid Cluster_High_Income using fe_gini_cluster.txt, replace style(tex)  ///
+estout Cluster_OECD Cluster_G20 Cluster_Doner Cluster_Non_Aid using secondstageginigroups.txt, replace style(tex)  ///
 	cells(b(star fmt(3)) se(fmt(4) par))  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///	
-	label legend postfoot("FE with Gini Cluster")
+	label legend postfoot("Second stage different groups of countries")
 
 *setting style*
 mi set flong
