@@ -32,6 +32,14 @@ replace gni_dummy = 0 if gni_dummy ==.
 ttest funding_capita, by(gni_dummy)
 ttest altruism, by(gni_dummy)
 
+preserve 
+drop if year < 2006
+drop if year > 2018
+drop if year == 2007
+drop if year == 2009
+misstable patterns funding_capita demo govexpense  gdpcapita gni
+restore
+
 *setting style*
 mi set flong
 *examine*
