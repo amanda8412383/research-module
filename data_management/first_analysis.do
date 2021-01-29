@@ -116,14 +116,14 @@ graph export "`PATH_FIGURES'/funding_per_gdp_altruism_scatter.pdf", replace
 
 // Plot mean humanitarian aid contribution per gdp on altruism.
 graph twoway ///
-	(scatter avg_funding_gdp altruism if year==2019 & oecd==0 & ///
-		avg_funding_gdp>0.0001, msize(small) mcolor(midblue)) ///
-	(scatter avg_funding_gdp altruism if year==2019 & oecd==1 & ///
-		avg_funding_gdp>0.0001, msize(small) mcolor(red)) ///
-	(lfit avg_funding_gdp altruism if year==2019 & oecd==0 & ///
-		avg_funding_gdp>0.0001, lcolor(midblue)) ///
-	(lfit avg_funding_gdp altruism if year==2019 & oecd==1 & ///
-		avg_funding_gdp>0.0001, lcolor(red)), ///
+	(scatter avg_funding_gdp altruism if year==2019 & oecd==0  ///
+		, msize(small) mcolor(midblue)) ///
+	(scatter avg_funding_gdp altruism if year==2019 & oecd==1  ///
+		, msize(small) mcolor(red)) ///
+	(lfit avg_funding_gdp altruism if year==2019 & oecd==0  ///
+		, lcolor(midblue)) ///
+	(lfit avg_funding_gdp altruism if year==2019 & oecd==1  ///
+		, lcolor(red)), ///
 	ytitle("Avg. Humanitarian Aid Funding" "per GDP (2010-19)", height(10)) xtitle(Altruism) ///
 	legend(label(1 non OECD) label(2 OECD)) ///
 	graphregion(fcolor(white))
@@ -137,18 +137,19 @@ graph export "`PATH_FIGURES'/funding_per_capita_altruism_scatter.pdf", replace
 
 // Plot mean humanitarian aid contribution per capita on altruism.
 graph twoway ///
-	(scatter avg_funding_capita altruism if year==2019 & oecd==0 & ///
-		avg_funding_capita>0.1, msize(small) mcolor(midblue)) ///
-	(scatter avg_funding_capita altruism if year==2019 & oecd==1 & ///
-		avg_funding_capita>0.1, msize(small) mcolor(red)) ///		
-	(lfit avg_funding_capita altruism if year==2019 & oecd==0 & ///
-		avg_funding_capita>0.1, lcolor(midblue)) ///
-	(lfit avg_funding_capita altruism if year==2019 & oecd==1 & ///
-		avg_funding_capita>0.1, lcolor(red)), ///		
+	(scatter avg_funding_capita altruism if year==2019 & oecd==0  ///
+		, msize(small) mcolor(midblue)) ///
+	(scatter avg_funding_capita altruism if year==2019 & oecd==1  ///
+		, msize(small) mcolor(red)) ///		
+	(lfit avg_funding_capita altruism if year==2019 & oecd==0  ///
+		, lcolor(midblue)) ///
+	(lfit avg_funding_capita altruism if year==2019 & oecd==1  ///
+		, lcolor(red)), ///		
 	ytitle("Avg. Humanitarian Aid Funding" "per capita (2010-19)", height(10)) xtitle(Altruism) ///
 	legend(label(1 non OECD) label(2 OECD)) ///
 	graphregion(fcolor(white))
 graph export "`PATH_FIGURES'/avg_funding_per_capita_altruism_scatter.pdf", replace
+
 
 
 
@@ -160,14 +161,14 @@ graph export "`PATH_FIGURES'/funding_gov_size_altruism_scatter.pdf", replace
 
 // Plot mean humanitarian aid contribution relative to government size on altruism.
 graph twoway ///
-	(scatter avg_funding_govsize altruism if year==2019 & oecd==0 & ///
-		avg_funding_govsize>0.00000000001, msize(small) mcolor(midblue)) ///
-	(scatter avg_funding_govsize altruism if year==2019 & oecd==1 & ///
-		avg_funding_govsize>0.00000000001, msize(small) mcolor(red)) ///		
-	(lfit avg_funding_govsize altruism if year==2019 & oecd==0 & ///
-		avg_funding_govsize>0.00000000001, lcolor(midblue)) ///
-	(lfit avg_funding_govsize altruism if year==2019 & oecd==1 & ///
-		avg_funding_govsize>0.00000000001, lcolor(red)), ///
+	(scatter avg_funding_govsize altruism if year==2019 & oecd==0  ///
+		, msize(small) mcolor(midblue)) ///
+	(scatter avg_funding_govsize altruism if year==2019 & oecd==1  ///
+		, msize(small) mcolor(red)) ///		
+	(lfit avg_funding_govsize altruism if year==2019 & oecd==0  ///
+		, lcolor(midblue)) ///
+	(lfit avg_funding_govsize altruism if year==2019 & oecd==1  ///
+		, lcolor(red)), ///
 	ytitle("Avg. Humanitarian Aid Funding" "rel. to Government Size (2010-19)", height(10)) xtitle(Altruism) ///
 	legend(label(1 non OECD) label(2 OECD))	///
 	graphregion(fcolor(white))
