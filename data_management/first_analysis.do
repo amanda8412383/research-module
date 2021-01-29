@@ -67,9 +67,9 @@ label var avg_funding_govsize "Avg. Humanitarian Aid Funding rel. to Government 
 
 // generate variable with democracy index categories
 gen demo_categories = 1 
-replace demo_categories = 2 if demo >=4
-replace demo_categories = 3 if demo >=6
-replace demo_categories = 4 if demo >=8
+replace demo_categories = 2 if demo >=40
+replace demo_categories = 3 if demo >=60
+replace demo_categories = 4 if demo >=80
 label var demo_categories "Democracy Index Categories"
 label define demo_cat 1 "Authoritarian regime" 2 "Hybrid regime" 3 "Flawed democracy" 4 "Full democracy"
 label val demo_categories demo_cat
@@ -207,7 +207,7 @@ graph twoway ///
 		avg_funding_capita>0.01), ///
 	by(demo_categories) ///
 	ytitle("Avg. Humanitarian Aid Contribution per capita (2010-19)") xtitle(Altruism) graphregion(fcolor(white))
-graph export "`PATH_FIGURES'/avg_funding_per_capita_altruism_by_demo_scatter.pdf", replace
+graph export "`PATH_FIGURES'/avg_funding_per_capita_by_demo_scatter.pdf", replace
 
 
 // Plot mean humanitarian aid contribution per GDP on altruism by democracy level.
