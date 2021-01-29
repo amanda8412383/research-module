@@ -185,7 +185,7 @@ graph twoway ///
 	(lfit avg_gdpcapita demo), ///
 	ytitle(Avg. GDP per Capita (2003-2019), height(5)) xtitle(Democratization Index) legend(off) ///
 	graphregion(fcolor(white))
-graph export "`PATH_FIGURES'/Avg_GDP_capita_democratization_scatter.pdf", replace
+graph export "`PATH_FIGURES'/avg_GDP_capita_democratization_scatter.pdf", replace
 
 
 // Plot GDP per capita on altruism
@@ -197,7 +197,7 @@ graph twoway ///
 	(scatter avg_gdpcapita altruism, msize(small)) ///
 	(lfit avg_gdpcapita altruism), ///
 	ytitle(Avg. GDP per Capita (2003-2019)) xtitle(Altruism) legend(off) graphregion(fcolor(white))
-graph export "`PATH_FIGURES'/Avg_GDP_capita_altruism_scatter.pdf", replace
+graph export "`PATH_FIGURES'/avg_GDP_capita_altruism_scatter.pdf", replace
 
 
 // Plot mean humanitarian aid contribution per capita on altruism by democracy level.
@@ -208,7 +208,7 @@ graph twoway ///
 		avg_funding_capita>0.01), ///
 	by(demo_categories) ///
 	ytitle("Avg. Humanitarian Aid Contribution per capita (2010-19)") xtitle(Altruism) graphregion(fcolor(white))
-graph export "`PATH_FIGURES'/avg_funding_per_capita_by_demo_scatter.pdf", replace
+graph export "`PATH_FIGURES'/avg_funding_per_capita_altruism_by_demo_scatter.pdf", replace
 
 
 // Plot mean humanitarian aid contribution per GDP on altruism by democracy level.
@@ -220,6 +220,30 @@ graph twoway ///
 	by(demo_categories) ///
 	ytitle("Avg. Humanitarian Aid Contribution per GDP (2010-19)") xtitle(Altruism) graphregion(fcolor(white))
 graph export "`PATH_FIGURES'/avg_funding_per_GDP_altruism_by_demo_scatter.pdf", replace
+
+// Plot mean humanitarian aid contribution per capita on trust by democracy level.
+graph twoway ///
+	(scatter avg_funding_capita trust if year==2019 & demo_categories==1, msize(small) mcolor(midblue)) ///
+	(scatter avg_funding_capita trust if year==2019 & demo_categories==2, msize(small) mcolor(red)) ///
+	(scatter avg_funding_capita trust if year==2019 & demo_categories==3, msize(small) mcolor(green)) ///
+	(scatter avg_funding_capita trust if year==2019 & demo_categories==4, msize(small) mcolor(orange)) ///
+	(lfit avg_funding_capita trust if year==2019 & demo_categories==1, lcolor(midblue))  ///
+	(lfit avg_funding_capita trust if year==2019 & demo_categories==2, lcolor(red))  ///
+	(lfit avg_funding_capita trust if year==2019 & demo_categories==3, lcolor(green))  ///
+	(lfit avg_funding_capita trust if year==2019 & demo_categories==4, lcolor(orange)), ///
+	ytitle("Avg. Humanitarian Aid Contribution" "per capita (2010-19)", height(9)) xtitle(Trust) graphregion(fcolor(white))  ///
+	legend(label(1 Authoritarian regime) label(2 Hybrid regime) label(3 Flawed democracy) label(4 Full democracy))	
+graph export "`PATH_FIGURES'/avg_funding_per_capita_trust_by_demo_scatter.pdf", replace
+
+
+graph twoway ///
+	(scatter avg_funding_capita trust if year==2019 & demo<50, msize(small) mcolor(midblue)) ///
+	(scatter avg_funding_capita trust if year==2019 & demo>=50, msize(small) mcolor(red)) ///
+	(lfit avg_funding_capita trust if year==2019 & demo<50, lcolor(midblue))  ///
+	(lfit avg_funding_capita trust if year==2019 & demo>=50, lcolor(red)),  ///
+	ytitle("Avg. Humanitarian Aid Contribution" "per capita (2010-19)", height(9)) xtitle(Trust) graphregion(fcolor(white))  ///
+	legend(label(1 less democratic) label(2 more democratic))
+graph export "`PATH_FIGURES'/avg_funding_per_capita_trust_by_two_demo_scatter.pdf", replace
 
 
 // plot altruism and Net Official Development Assistance (ODA)
