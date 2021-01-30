@@ -1,9 +1,9 @@
 //this file store study notes for mi
 clear all
 // Specify path to project root.
-*local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 *local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
-local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
+*local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
 
 // *data* folder.
 local PATH_DATA "`PATH_PROJECT_ROOT'/data"
@@ -29,15 +29,28 @@ pwcorr gni income region_num pledge altruism trust g20 negrecip aid patience pos
 //altruism has significant different group mean
 gen gni_dummy = 1 if gni != .
 replace gni_dummy = 0 if gni_dummy ==.
+estpost ttest funding_capita altruism, by(gni_dummy)
+estout . using ttest.txt, ///
+	cells("count(label(Obs)) b(fmt(3) label(Mean)) se(fmt(3) label(SE)) t(fmt(3) label(t)) df_t(fmt(3) label(Degrees of Freedom)) p_l(fmt(3) label(Ha: diff < 0)) p(fmt(3) label(Ha: diff != 0)) p_u(fmt(3) label(Ha: diff > 0))") ///
+	replace style(tex) ///
+	varlabels(altruism "Altruism" funding_capita "Humanitarian Aid Funding per Capita")  ///
+    label legend postfoot("t-Test")
+
 ttest funding_capita, by(gni_dummy)
 ttest altruism, by(gni_dummy)
 
+<<<<<<< HEAD
 preserve 
 drop if year < 2006
 drop if year > 2018
 drop if year == 2007
 drop if year == 2009
 misstable patterns funding_capita demo govexpense  gdpcapita gni
+=======
+preserve
+drop if year < 2016 | year > 2018 | year == 2007 | year == 2009
+misstable patterns funding_capita demo govexpense gdpcapita gni
+>>>>>>> 61ac878879dfc27dfda450f8cd54e7d4284adea5
 restore
 
 *setting style*

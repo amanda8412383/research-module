@@ -1,9 +1,9 @@
 ///this file contains the main regression without adding in gini index & a large number of study notes 
 clear all
 // Specify path to project root.
-*local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
+local PATH_PROJECT_ROOT "C:\Users\Julia\Documents\Uni_Bonn_Master\3.Semester\Research_Modul\Project\research-module"  // Julia
 *local PATH_PROJECT_ROOT "C:\Users\Timo\Desktop\RM\research-module"  // Timo
-local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
+*local PATH_PROJECT_ROOT "C:\Users\amand\Desktop\rm"  
 
 // *data* folder.
 local PATH_DATA "`PATH_PROJECT_ROOT'/data"
@@ -50,16 +50,15 @@ xtset isonum year
 
 
 
-log using "`PATH_TABLES'/primary",replace smcl
+*log using "`PATH_TABLES'/primary",replace smcl
 
 **panel fe**
 
-xtreg funding_capita demo govexpense  gdpcapita,fe vce(cluster isonum)
+*xtreg funding_capita demo govexpense  gdpcapita,fe vce(cluster isonum)
 
 **panel fe with subgroups of demos**
-
-xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita,fe vce(cluster isonum)
-
+eststo clear
+eststo Baseline: xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita,fe vce(cluster isonum)
 
 **predict res for fe**
 predict u, u
@@ -88,16 +87,16 @@ bysort isonum: egen u_bar = mean(u)
 preserve
 *droping year for avoiding duplications 
 drop if year != 2018
-
+/*
 *robust estimate time invariant*
 reg u_bar i.income  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(robust) 
 predict u_r, re
 kdensity u_r, normal
-
+*/
 *cluster*
-reg  u_bar i.income  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum) 
-predict u_c, re
-kdensity u_c, normal
+eststo Cluster_Baseline: reg  u_bar i.income  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum) 
+*predict u_c, re
+*kdensity u_c, normal
 
 restore
 
@@ -106,7 +105,7 @@ restore
 //pnorm sensitive to non-normality in middle range
 //qnorm sensitive to non-normality in tails
 //eit close to normal but ui is not
-kdensity u_bar, normal
+//kdensity u_bar, normal
 
 *pnorm u_bar
 *qnorm u_bar
@@ -115,13 +114,13 @@ kdensity u_bar, normal
 
 preserve
 drop if oecd == 0
-xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
+eststo OECD: xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_oecd, u
 bysort isonum: egen u_bar_oecd = mean(ui_oecd)
 drop if year != 2018
-reg u_bar_oecd  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+eststo Cluster_OECD: reg u_bar_oecd  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
 predict u_r_oecd, re
-kdensity ui_oecd, normal
+*kdensity ui_oecd, normal
 
 restore
 
@@ -129,38 +128,38 @@ restore
 
 preserve
 drop if g20 == 0
-xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
+eststo G20: xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_g20, u
 bysort isonum: egen u_bar_g20 = mean(ui_g20)
 drop if year != 2018
-reg u_bar_g20  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+eststo Cluster_G20: reg u_bar_g20  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
 predict u_r_g20, re
-kdensity ui_g20, normal
+*kdensity ui_g20, normal
 
 restore
 **using oda doner country only**
 preserve
 drop if oda_int == 0
-xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
+eststo Doner: xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_oda, u
 bysort isonum: egen u_bar_oda = mean(ui_oda)
 drop if year != 2018
-reg u_bar_oda  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+eststo Cluster_Doner: reg u_bar_oda  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
 predict u_r_oda, re
-kdensity ui_oda, normal
+*kdensity ui_oda, normal
 
 restore
 
 **using non aid received country only**
 preserve
 drop if aid == 1
-xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
+eststo Non_Aid: xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_aid, u
 bysort isonum: egen u_bar_aid = mean(ui_aid)
 drop if year != 2018
-reg u_bar_aid  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+eststo Cluster_Non_Aid: reg u_bar_aid  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
 predict u_r_aid, re
-kdensity ui_aid, normal
+*kdensity ui_aid, normal
 
 restore
 
@@ -169,15 +168,26 @@ restore
 **using high income country only**
 preserve
 drop if income != 1
-xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
+eststo High_Income: xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense  gdpcapita ,fe vce(cluster isonum)
 predict ui_in, u
 bysort isonum: egen u_bar_in = mean(ui_in)
 drop if year != 2018
-reg u_bar_in  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+eststo Cluster_High_Income: reg u_bar_in  i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
 predict u_r_in, re
-kdensity ui_in, normal
+*kdensity ui_in, normal
 
 restore
+estout Baseline OECD G20 Doner Non_Aid High_Income using firststage.txt, replace style(tex)  ///
+	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
+	varlabels(_cons "Constant")  ///	
+	label legend postfoot("FE")
+
+estout Cluster_Baseline Cluster_OECD Cluster_G20 Cluster_Doner Cluster_Non_Aid Cluster_High_Income using secondstage.txt, replace style(tex)  ///
+	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
+	varlabels(_cons "Constant")  ///
+	label legend postfoot("FE Cluster")
 
 
 log close
