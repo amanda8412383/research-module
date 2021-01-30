@@ -103,6 +103,7 @@ class Quick_reg(object):
         #drop na
         df = df.dropna()
 
+
         #FEF step 1
         mod = PooledOLS(df.funding_capita, df[self.x_year])
         pooled_res = mod.fit(cov_type='clustered', cluster_entity=True, cluster_time=True, entity_effects=True)
@@ -113,7 +114,7 @@ class Quick_reg(object):
         df2 = df_u.groupby(['isocode'] + self.x_str).agg(self.x_dict).reset_index().set_index('isocode')  
 
         #FEF step 3
-        df_dummy = pd.get_dummies(df2)
+        df_dummy = pd.get_dummies(df2, drop_first=True)
 
 
         return df_dummy
@@ -124,10 +125,10 @@ class Quick_reg(object):
         #avoid collinearity
         x_list = df.columns.to_list()
         x_list.remove('res')
-        if 'income_type_Low income' in x_list:
-            x_list.remove('income_type_Low income')
-        if 'income_type_Low income' in x_list:
-            x_list.remove('region_Sub-Saharan Africa')
+        # if 'income_type_Low income' in x_list:
+        #     x_list.remove('income_type_Low income')
+        # if 'income_type_Low income' in x_list:
+        #     x_list.remove('region_Sub-Saharan Africa')
 
         #FEF step 3
         mod = sm.OLS(df['res'], df[x_list])
