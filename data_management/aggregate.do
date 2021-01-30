@@ -20,9 +20,27 @@ egen isonum = group(isocode)
 egen income = group(income_type)
 egen region_num = group(region)
 gen funding_capita = funding/pop
-gen demo_median = 1 if demo_mean >  64.945
-replace demo_median = 0 if demo_median ==.
+gen demo_median = 1 if demo_mean <  44.115
+replace demo_median = 3 if demo_mean > 64.945
+replace demo_median = 4 if demo_mean > 77.76
+replace demo_median = 2 if demo_median ==.
+
 xtset isonum year
+
+**loop through 4 quantile**
+// foreach i of numlist 1/4 {
+
+// 	preserve
+// 	drop if demo_median == `i'
+// 	xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
+// 	predict u`i', u
+// 	bysort isonum: egen u_bar`i' = mean(u`i')
+// 	drop if year != 2018
+// 	reg u_bar`i' altruism posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+// 	predict u_r`i', re
+// 	kdensity u_r`i', normal
+
+// 	restore}
 
 
 
@@ -30,7 +48,7 @@ xtset isonum year
 **using above median only**
 
 preserve
-drop if demo_median == 0 
+drop if demo_median < 3 
 xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
 predict ui_m, u
 bysort isonum: egen u_bar_m = mean(ui_m)
@@ -43,7 +61,7 @@ restore
 **using below median only**
 
 preserve
-drop if demo_median == 1
+drop if demo_median > 2
 xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
 predict ui_l, u
 bysort isonum: egen u_bar_l = mean(ui_l)
