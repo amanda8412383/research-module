@@ -27,8 +27,8 @@ gen demo_median = 1 if demo_mean <  44.115
 replace demo_median = 3 if demo_mean > 64.945
 replace demo_median = 4 if demo_mean > 77.76
 replace demo_median = 2 if demo_median ==.
-gen demo_low = 0
-replace demo_low=1 if demo_median <3
+gen demo_high = 0
+replace demo_high=1 if demo_median >2
 
 *list isocode isonum in 5/10, sepby(isocode)
 *list income_type income in 48/56, sepby(income_type)
@@ -45,7 +45,7 @@ eststo Model3: quietly reg funding_capita altruism demo, vce(cluster isonum)
 *ols with controls*
 eststo Model4: quietly reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 *reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
-eststo Model5: reg funding_capita altruism demo c.altruism#demo_low i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+eststo Model5: reg funding_capita altruism demo c.altruism#demo_high i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 
 esttab
 estout * using ols.txt, replace style(tex)  ///
