@@ -38,6 +38,8 @@ eststo Model3: quietly reg funding_capita altruism demo, vce(cluster isonum)
 *ols with controls*
 eststo Model4: quietly reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 *reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
+eststo Model5: reg funding_capita c.altruism##c.demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
+
 esttab
 estout * using ols.txt, replace style(tex)  ///
 	cells(b(star fmt(3)) se(fmt(3) par))	 ///
