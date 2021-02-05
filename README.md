@@ -1,4 +1,9 @@
-This respiratory stores project for the course Research Module in Applied Microeconomics, discussing whether the altruism score in global preference survey data affects the general funding provided by countries, based on those counties' democratization level. The project is still in progress. 
+For EPP grading, while the stata codes and the paper contains group works, all the .py and .ipynb files and more than half the stata codes are written by myself.
+
+This respiratory stores project for the course Research Module in Applied Microeconomics, the project topic is: Are Foreign Aid Contributions Associated with Population-Level Altruism?
+
+This paper studies whether governmental humanitarian aid contributions are correlated with the altruistic preference in the population and if democratic systems reinforce this association. Based on a globally representative survey on preference, we estimate the relationship between altruism,
+democracy, and foreign aid which is expected by the political-economic theory proposed by Chong/Gradstein (2008), using a modified static panel data model. The full result could be read in paper.pdf.
 
 _mybinder_ is also a possible viewing option. To ensure the reproductivity, this project is connected to Travis. Dataset used in the project is zipped as data.zip. auxilary.py stores function that is used across ipython notebooks. environment request is specified in env.yml. 
 
