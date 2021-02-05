@@ -72,6 +72,22 @@ kdensity u_r_m, normal
 
 restore
 
+**using demo_mean above 60.1, so flawed and full democracies
+
+preserve
+keep if demo_mean > 60.1
+xtreg funding_capita demo_electoral demo_gov demo_participate demo_culture demo_liberty govexpense gni gdpcapita ,fe vce(cluster isonum)
+predict ui_l, u
+bysort isonum: egen u_bar_l = mean(ui_l)
+drop if year != 2018
+eststo flawed: reg u_bar_l  i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum)  
+predict u_r_l, re
+kdensity u_r_l, normal
+
+restore
+
+
+
 esttab
 estout * using trust.txt, replace style(tex)  ///
 	cells(b(star fmt(3)) se(fmt(3) par)) starlevels(* 0.1 ** 0.05 *** 0.01)  ///
