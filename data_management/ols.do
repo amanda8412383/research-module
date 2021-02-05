@@ -47,9 +47,9 @@ eststo Model4: quietly reg funding_capita altruism demo i.income i.year i.region
 *reg funding_capita altruism demo i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(robust)
 eststo Model5: reg funding_capita altruism demo c.altruism#demo_high i.income i.year i.region_num posrecip risktaking patience trust negrecip govexpense pop gdp, vce(cluster isonum)
 
-esttab
+esttab, star(* 0.1 ** 0.05 *** 0.01)
 estout * using ols.txt, replace style(tex)  ///
-	cells(b(star fmt(3)) se(fmt(3) par))	 ///
+	cells(b(star fmt(3)) se(fmt(3) par)) starlevels(* 0.1 ** 0.05 *** 0.01)	 ///
 	varlabels(altruism "Altruism" demo "Democratization Index" gni "Gini Index" _cons "Constant")  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
     label legend postfoot("OLS Estimates")

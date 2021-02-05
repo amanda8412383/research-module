@@ -178,13 +178,13 @@ predict u_r_in, re
 
 restore
 estout Baseline OECD G20 Doner Non_Aid High_Income using firststage.txt, replace style(tex)  ///
-	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	cells(b(star fmt(3)) se(fmt(4) par)) starlevels(* 0.1 ** 0.05 *** 0.01)  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///	
 	label legend postfoot("FE")
 
 estout Cluster_Baseline Cluster_OECD Cluster_G20 Cluster_Doner Cluster_Non_Aid Cluster_High_Income using secondstage.txt, replace style(tex)  ///
-	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	cells(b(star fmt(3)) se(fmt(4) par)) starlevels(* 0.1 ** 0.05 *** 0.01)  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///
 	label legend postfoot("FE Cluster")

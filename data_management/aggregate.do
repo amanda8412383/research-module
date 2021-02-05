@@ -74,7 +74,7 @@ restore
 
 esttab
 estout * using trust.txt, replace style(tex)  ///
-	cells(b(star fmt(3)) se(fmt(3) par))	 ///
+	cells(b(star fmt(3)) se(fmt(3) par)) starlevels(* 0.1 ** 0.05 *** 0.01)  ///
 	varlabels(altruism "Altruism"  trust "Trust" demo "Democratization Index" gni "Gini Index" _cons "Constant")  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
     label legend postfoot("Trust")

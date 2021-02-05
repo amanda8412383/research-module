@@ -54,7 +54,7 @@ eststo Cluster_region: reg  u_bar i.income i.region_num altruism, vce(cluster is
 eststo Cluster_pref: reg  u_bar i.income altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum) 
 eststo Cluster_both: reg  u_bar i.income i.region_num altruism  posrecip risktaking patience trust negrecip , vce(cluster isonum) 
 estout Cluster_Baseline Cluster_region Cluster_pref Cluster_both using secondstagegini.txt, replace style(tex)  ///
-	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	cells(b(star fmt(3)) se(fmt(4) par)) starlevels(* 0.1 ** 0.05 *** 0.01) ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///	
 	label legend postfoot("Second Stage with Gini")
@@ -131,13 +131,13 @@ predict u_r_in, re
 
 restore
 estout Baseline OECD G20 Doner Non_Aid High_Income using firststagegini.txt, replace style(tex)  ///
-	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	cells(b(star fmt(3)) se(fmt(4) par)) starlevels(* 0.1 ** 0.05 *** 0.01)  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///	
 	label legend postfoot("FE with Gini")
 
 estout Cluster_OECD Cluster_G20 Cluster_Doner Cluster_Non_Aid using secondstageginigroups.txt, replace style(tex)  ///
-	cells(b(star fmt(3)) se(fmt(4) par))  ///
+	cells(b(star fmt(3)) se(fmt(4) par)) starlevels(* 0.1 ** 0.05 *** 0.01)  ///
 	stats(r2 N,fmt(3 0) labels(R-squared "N"))  ///
 	varlabels(_cons "Constant")  ///	
 	label legend postfoot("Second stage different groups of countries")
