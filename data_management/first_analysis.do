@@ -74,6 +74,14 @@ label var demo_categories "Democracy Index Categories"
 label define demo_cat 1 "Authoritarian regime" 2 "Hybrid regime" 3 "Flawed democracy" 4 "Full democracy"
 label val demo_categories demo_cat
 
+// generate variable for democracy index median
+gen demo_median = 1 if demo_mean <  44.115
+replace demo_median = 3 if demo_mean > 64.945
+replace demo_median = 4 if demo_mean > 77.76
+replace demo_median = 2 if demo_median ==.
+label var demo_median "Median Democracy Index"
+label define demo_median 1 "below median" 2 "below median" 3 "above median" 4 "above median"
+
 
 // summary statistics
 estpost summarize altruism funding funding_capita gdp govexpense demo gni, 
@@ -237,12 +245,12 @@ graph export "`PATH_FIGURES'/avg_funding_per_capita_trust_by_demo_scatter.pdf", 
 
 
 graph twoway ///
-	(scatter avg_funding_capita trust if year==2019 & demo<50, msize(small) mcolor(midblue)) ///
-	(scatter avg_funding_capita trust if year==2019 & demo>=50, msize(small) mcolor(red)) ///
-	(lfit avg_funding_capita trust if year==2019 & demo<50, lcolor(midblue))  ///
-	(lfit avg_funding_capita trust if year==2019 & demo>=50, lcolor(red)),  ///
+	(scatter avg_funding_capita trust if year==2019 & demo_median<3, msize(small) mcolor(midblue)) ///
+	(scatter avg_funding_capita trust if year==2019 & demo_median>2, msize(small) mcolor(red)) ///
+	(lfit avg_funding_capita trust if year==2019 & demo_median<3, lcolor(midblue))  ///
+	(lfit avg_funding_capita trust if year==2019 & demo_median>2, lcolor(red)),  ///
 	ytitle("Avg. Humanitarian Aid Contribution" "per capita (2010-19)", height(9)) xtitle(Trust) graphregion(fcolor(white))  ///
-	legend(label(1 less democratic) label(2 more democratic))
+	legend(label(1 below median) label(2 above median))
 graph export "`PATH_FIGURES'/avg_funding_per_capita_trust_by_two_demo_scatter.pdf", replace
 
 
