@@ -254,6 +254,14 @@ graph twoway ///
 graph export "`PATH_FIGURES'/avg_funding_per_capita_trust_by_two_demo_scatter.pdf", replace
 
 
+graph twoway ///
+	(scatter avg_funding_capita altruism if year==2019 & demo_median<3, msize(small)) ///
+	(lfit avg_funding_capita trust if year==2019 & demo_median<3),  ///
+	ytitle("Avg. Humanitarian Aid Contribution" "per capita (2010-19)", height(9)) xtitle(Altruism) graphregion(fcolor(white)) 
+graph export "`PATH_FIGURES'/avg_funding_per_capita_altruism_by_two_demo_scatter.pdf", replace
+
+
+
 // plot altruism and Net Official Development Assistance (ODA)
 graph twoway (scatter oda altruism, msize(small)) (lfit oda altruism), by(year) ytitle(Net Official Development Assistance) xtitle(Altruism) graphregion(fcolor(white))
 graph export "`PATH_FIGURES'/ODA_altruism_scatter.pdf", replace
