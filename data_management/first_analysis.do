@@ -90,8 +90,32 @@ estout . using summarystatistics.txt, ///
 	replace style(tex) ///
 	varlabels(altruism "Altruism" funding "Humanitarian Aid Funding" funding_capita "Humanitarian Aid Funding per Capita" gdp "GDP" govexpense "Government Expenditure" demo "Democratization Index" gni "Gini Index")  ///
     label legend postfoot("Summary Statistics")
+	
+	
+// time invariant
+preserve
+duplicates drop country, force
+drop if country =="Bosnia Herzegovina"
+estpost summarize altruism trust negrecip patience posrecip risktaking, 
+estout . using timeinvariant.txt, ///
+	cells("count(label(Obs)) mean(fmt(3) label(Mean)) sd(fmt(3) label(Sd)) min(fmt(3) label(Min)) max(fmt(3) label(Max))") ///
+	replace style(tex) ///
+	varlabels(altruism "Altruism" trust "Trust" negrecip "Neg. Reciprocity"  patience "Patience" posrecip "Pos. Reciprocity" risktaking "Risktaking")  ///
+    label legend postfoot("Summary Statistics Time Invariant")
+restore
+	
+// time variant
+estpost summarize funding_capita gdp govexpense demo gni if year==2006 | year ==2008 | (year>2009&year<2019), 
+estout . using timevariant.txt, ///
+	cells("count(label(Obs)) mean(fmt(3) label(Mean)) sd(fmt(3) label(Sd)) min(fmt(3) label(Min)) max(fmt(3) label(Max))") ///
+	replace style(tex) ///
+	varlabels(altruism "Altruism" funding "Humanitarian Aid Funding" funding_capita "Humanitarian Aid Funding per Capita" gdp "GDP" govexpense "Government Expenditure" demo "Democratization Index" gni "Gini Index")  ///
+    label legend postfoot("Summary Statistics Time Variant")	
 
+// count NA
+mdesc funding_capita gdp govexpense demo gni if year==2006 | year ==2008 | (year>2009&year<2019)	
 
+	
 // plot altruism and humanitarian aid contributions
 graph twoway (scatter funding altruism, msize(small)) (lfit funding altruism), by(year) ytitle(Humanitarian Aid Contribution) xtitle(Altruism) graphregion(fcolor(white))
 graph export "`PATH_FIGURES'/funding_altruism_scatter.pdf", replace
