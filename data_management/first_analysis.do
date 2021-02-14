@@ -105,6 +105,8 @@ estout . using timeinvariant.txt, ///
 restore
 	
 // time variant
+preserve
+drop if country =="Bosnia Herzegovina"
 estpost summarize funding_capita gdp govexpense demo gni if year==2006 | year ==2008 | (year>2009&year<2019), 
 estout . using timevariant.txt, ///
 	cells("count(label(Obs)) mean(fmt(3) label(Mean)) sd(fmt(3) label(Sd)) min(fmt(3) label(Min)) max(fmt(3) label(Max))") ///
@@ -114,6 +116,7 @@ estout . using timevariant.txt, ///
 
 // count NA
 mdesc funding_capita gdp govexpense demo gni if year==2006 | year ==2008 | (year>2009&year<2019)	
+restore
 
 	
 // plot altruism and humanitarian aid contributions
