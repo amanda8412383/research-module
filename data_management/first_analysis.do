@@ -102,6 +102,9 @@ estout . using timeinvariant.txt, ///
 	replace style(tex) ///
 	varlabels(altruism "Altruism" trust "Trust" negrecip "Neg. Reciprocity"  patience "Patience" posrecip "Pos. Reciprocity" risktaking "Risktaking")  ///
     label legend postfoot("Summary Statistics Time Invariant")
+
+tab region	
+tab income	
 restore
 	
 // time variant
