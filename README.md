@@ -1,4 +1,4 @@
-For EPP grading, while the stata codes and the paper contains group works, all the .py and .ipynb files and more than half the stata codes are written by myself.
+For EPP grading, while the stata codes and the paper contains group works, all the .py and .ipynb files and more than half of the stata codes are written by myself.
 
 This respiratory stores project for the course Research Module in Applied Microeconomics, the project topic is: Are Foreign Aid Contributions Associated with Population-Level Altruism?
 
